@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>用户登录</h1>
+<form method="post" action="/api/login/" novalidate>
+    {% csrf_token %}
+{#    <input type="text" name="user" placeholder="用户名">#}
+{#    <input type="password" name="pwd" placeholder="密码">#}
+    <label>用户名</label>
+    {{ form.username }}
+    <span style="color: red">{{ form.username.errors.0 }}</span>
+    <br>
+    <label>密码</label>
+    {{ form.password }}
+    <span style="color: red">{{ form.password.errors.0 }}</span>
+    <br>
+    <label>验证码</label>
+    {{ form.code }}
+    <span style="color: red">{{ form.code.errors.0 }}</span>
+    <img id="image_code" src="/api/image_code/">
+    <br>
+    <input type="submit" value="提交"/>
+</form>
+<a href="/api/register/">注册</a>
+</body>
+</html>

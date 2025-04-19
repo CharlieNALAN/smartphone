@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>景区推荐游览路线</title>
+</head>
+<body>
+<input id="btnAdd" type="button" value="新建游览路线">
+<div class="modal fade" id="myModal">
+    <form id="formAdd" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+            <span id="err_msg" style="color: red">{{ field.errors.0 }}</span>
+            <br><br>
+        {% endfor %}
+{#        {% for field in form2 %}#}
+{#            <label>{{ field.label }}</label>#}
+{#            {{ field }}#}
+{#            <span style="color: red">{{ field.errors.0 }}</span>#}
+{#            <br><br>#}
+{#        {% endfor %}#}
+        <input id="btnSave" type="submit" value="提交"/>
+    </form>
+    <table border="1" style="float: left">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>路线名称</th>
+                <th>路线描述</th>
+                <th>所属景区</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in queryset %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.route_name }}</td>
+                    <td>{{ item.route_description }}</td>
+                    <td>{{ item.scenic.scenic_name }}</td>
+                    <td><a href="/api/attraction/{{ item.id }}/edit/">编辑</a>
+                    <input class="btn-delete" type="button" value="删除"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        bindBtnAddEvent();
+        bindBtnSaveEvent();
+        bindBtnDeleteEvent();
+    })
+
+    function bindBtnAddEvent() {
+        $("#btnAdd").click(function () {
+            $("#myModal").modal("show");
+        })
+    }
+
+    function bindBtnSaveEvent() {
+        $("#btnSave").click(function () {
+            $.ajax({
+                url: "/api/route/add/",
+                type: "post",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success:function (res){
+                    if (res.status) {
+                        alert("创建成功");
+                    } else {
+                        $.each(res.error, function (name, errorList) {
+                            $("#id_"+name).next().text(errorList[0]);
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+    function bindBtnDeleteEvent() {
+        $(".btn-delete").click(function () {
+            alert("点击了删除");
+        })
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+
+.container {
+	width: 100%;
+	height: 100vh;
+	background: #f4f5f7;
+}
+.info-container {
+	width: 93%;
+	margin: 10px 0;
+	padding: 15px;
+	border-radius: 12px;
+	background: white;
+}
+.attraction-info {
+	height: 100px;
+	background: linear-gradient(to right, #00c9ff 0%, #92fe9d 100%);
+	color: white;
+}
+.attraction-time {
+	margin-top: 10px;
+	font-size: 12px;
+}
+.visitor-info,
+.book-info {
+	font-size: 14px;
+}
+.visitor-info {
+	margin-bottom: 100px;
+}
+.book-info {
+	height: 110px;
+}
+.gray-text {
+	color: gray;
+}
+.form {
+	width: 380px;
+	margin: 20px;
+	padding: 20px;
+	background: white;
+	border-radius: 10px;
+}
+.save {
+	width: 93%;
+}
+

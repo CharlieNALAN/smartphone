@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增景点</title>
+</head>
+<body>
+<h1>新增景点</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="景点名称">
+    <input type="text" name="address" placeholder="景点地址">
+    <input type="text" name="desc" placeholder="景点描述">
+    <label>景点类别</label>
+    <select>
+        {% for opt in category_choices %}
+            <option value="{{ opt.0 }}">{{ opt.1 }}</option>
+        {% endfor %}
+    </select>
+    <label>所属景区</label>
+    <select>
+        {% for opt in scenic_list %}
+            <option value="{{ opt.scenic_id }}">{{ opt.scenic_name }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="提交"/>
+</form>
+</body>
+</html>

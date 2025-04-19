@@ -1,0 +1,44 @@
+{% extends 'common.html' %}
+{% block content %}
+<h1>景点列表</h1>
+{#    <img src="{% static 'img/帕恰狗.png' %}" alt="">#}
+    <a href="/api/attraction/add/">新增景点</a>
+    <div style="float: right">
+        <form method="get">
+            <input type="text" name="search" placeholder="搜索景点" value="{{ search_data }}">
+            <span><button type="submit">搜索</button></span>
+        </form>
+    </div>
+    <table border="1" style="float: left">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>景点名称</th>
+                <th>景点地址</th>
+                <th>景点描述</th>
+                <th>景点类别</th>
+                <th>景点状态</th>
+                <th>所属景区</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in queryset %}
+                <tr>
+                    <td>{{ item.attraction_id }}</td>
+                    <td>{{ item.attraction_name }}</td>
+                    <td>{{ item.address }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.get_category_display }}</td>
+                    <td>{{ item.get_status_display }}</td>
+                    <td>{{ item.scenic.scenic_name }}</td>
+                    <td><a href="/api/attraction/{{ item.attraction_id }}/edit/">编辑</a></td>
+                    <td><a href="/api/attraction/delete/?nid={{ item.attraction_id }}">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <ul class="pagination">
+        {{ page_string }}
+    </ul>
+{% endblock %}

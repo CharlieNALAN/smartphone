@@ -1,0 +1,151 @@
+{% extends 'common.html' %}
+{% load static %}
+{% block content %}
+    <h1>历史数据</h1>
+    <div id="c1" style="width: 600px;height: 400px"></div>
+    <div id="c2" style="width: 600px;height: 400px"></div>
+    <div id="c3" style="width: 600px;height: 400px"></div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/echarts.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            initBar();
+            initPie();
+            initLine();
+        })
+
+        function initBar() {
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('c1'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: 'ECharts 入门示例'
+                },
+                tooltip: {},
+                legend: {
+                    data: []
+                },
+                xAxis: {
+                    data: []
+                },
+                yAxis: {},
+                series: []
+            };
+
+            $.ajax({
+                url: "/api/history/bardata/",
+                type: "get",
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        option.legend.data = res.data.legend
+                        option.xAxis.data = res.data.x_axis
+                        option.series = res.data.series_list
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(option);
+                    }
+                }
+            })
+        }
+
+        function initPie() {
+            var myChart = echarts.init(document.getElementById('c2'));
+            var option = {
+                title: {
+                    text: 'Referer of a Website',
+                    subtext: 'Fake Data',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    bottom: 0
+                },
+                series: [
+                    {
+                        name: 'Access From',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            $.ajax({
+                url: "/api/history/piedata/",
+                type: "get",
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        option.series[0].data = res.data;
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(option);
+                    }
+                }
+            })
+        }
+
+        function initLine() {
+            var myChart = echarts.init(document.getElementById('c3'));
+            var option = {
+                title: {
+                    text: 'Stacked Line'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: [],
+                    bottom: 0
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: []
+            };
+            $.ajax({
+                url: "/api/history/linedata/",
+                type: "get",
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        option.legend.data = res.data.legend
+                        option.xAxis.data = res.data.x_axis
+                        option.series = res.data.series_list
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(option);
+                    }
+                }
+            })
+        }
+
+
+    </script>
+{% endblock %}

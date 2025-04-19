@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增景点</title>
+</head>
+<body>
+<h1>新增景点</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="景点名称">
+    <input type="text" name="desc" placeholder="景点描述">
+    <input type="submit" value="提交"/>
+</form>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/home/home",
+    "pages/recommend/recommend",
+    "pages/map/map",
+    "pages/track/track",
+    "pages/user/user",
+    "pages/detail/detail",
+    "pages/attraction/attraction",
+    "pages/ticket/ticket",
+    "pages/buy/buy",
+    "pages/book/book",
+    "pages/booked/booked",
+    "pages/bought/bought"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3bcb98",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "static/tabbar_icon/home.png",
+        "selectedIconPath": "static/tabbar_icon/home-active.png"
+      },
+      {
+        "pagePath": "pages/recommend/recommend",
+        "text": "推荐",
+        "iconPath": "static/tabbar_icon/recommend.png",
+        "selectedIconPath": "static/tabbar_icon/recommend-active.png"
+      },
+      {
+        "pagePath": "pages/map/map",
+        "text": "地图",
+        "iconPath": "static/tabbar_icon/flag.png",
+        "selectedIconPath": "static/tabbar_icon/flag-active.png"
+      },
+      {
+        "pagePath": "pages/track/track",
+        "text": "足迹",
+        "iconPath": "static/tabbar_icon/history.png",
+        "selectedIconPath": "static/tabbar_icon/history-active.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/tabbar_icon/user.png",
+        "selectedIconPath": "static/tabbar_icon/user-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "使用高德地图获取用户当前位置"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseAddress",
+    "chooseLocation",
+    "choosePoi",
+    "getLocation",
+    "onLocationChange",
+    "startLocationUpdateBackground",
+    "startLocationUpdate"
+  ],
+  "usingComponents": {
+    "tab-bar": "/components/TabBar"
+  }
+}

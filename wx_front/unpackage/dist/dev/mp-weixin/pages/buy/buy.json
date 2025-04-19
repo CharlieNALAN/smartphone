@@ -1,0 +1,21 @@
+{
+  "navigationBarTitleText": "购票详情",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "uni-card": "/uni_modules/uni-card/components/uni-card/uni-card",
+    "u-line": "/node-modules/uview-ui/components/u-line/u-line",
+    "uni-datetime-picker": "/uni_modules/uni-datetime-picker/components/uni-datetime-picker/uni-datetime-picker",
+    "u-row": "/node-modules/uview-ui/components/u-row/u-row",
+    "u-col": "/node-modules/uview-ui/components/u-col/u-col",
+    "u-number-box": "/node-modules/uview-ui/components/u-number-box/u-number-box",
+    "u-icon": "/node-modules/uview-ui/components/u-icon/u-icon",
+    "u-button": "/node-modules/uview-ui/components/u-button/u-button",
+    "uni-popup": "/uni_modules/uni-popup/components/uni-popup/uni-popup",
+    "uni-title": "/uni_modules/uni-title/components/uni-title/uni-title",
+    "u-form": "/node-modules/uview-ui/components/u-form/u-form",
+    "u-form-item": "/node-modules/uview-ui/components/u-form-item/u-form-item",
+    "u-input": "/node-modules/uview-ui/components/u-input/u-input",
+    "u--text": "/node-modules/uview-ui/components/u--text/u--text",
+    "nav-bar": "/components/NavBar"
+  }
+}

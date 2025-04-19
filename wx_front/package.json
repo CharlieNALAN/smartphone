@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@vant/weapp": "^1.11.4",
+    "@vue/composition-api": "^1.7.2",
+    "uview-ui": "^2.0.37"
+  },
+  "devDependencies": {
+    "node-sass": "^9.0.0",
+    "sass-loader": "^10.5.2"
+  }
+}

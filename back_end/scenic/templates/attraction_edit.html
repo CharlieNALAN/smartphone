@@ -1,0 +1,17 @@
+{% extends 'common.html' %}
+{% block content %}
+<h2>编辑景点</h2>
+<form method="post" novalidate>
+    {% csrf_token %}
+{#    <input type="text" name="name" placeholder="景点名称" value="{{ row_object.name }}">#}
+{#    <input type="text" name="desc" placeholder="景点描述" value="{{ row_object.description }}">#}
+{#    <input type="submit" value="提交"/>#}
+    {% for field in form %}
+        <label>{{ field.label }}</label>
+        {{ field }}
+        <span style="color: red">{{ field.errors.0 }}</span>
+        <br><br>
+    {% endfor %}
+    <input type="submit" value="提交"/>
+</form>
+{% endblock %}

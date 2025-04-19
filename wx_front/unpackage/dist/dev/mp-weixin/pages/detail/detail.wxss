@@ -1,0 +1,45 @@
+
+.container {
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+}
+.address_view {
+	display: flex;
+	flex: 1;
+	align-items: center;
+}
+.nav_view {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	flex-direction: column;
+}
+.slot_img {
+	width: 20px;
+	height: 20px;
+}
+.tour_detail_content {
+	padding: 40rpx 30rpx 40rpx 30rpx;
+	width: 100%;
+}
+.tour_index_title {
+	font-weight: bold;
+}
+.tour_index_grade {
+	margin-top: 20rpx;
+	background: linear-gradient(to right, #faf0e5, #fbe4c8);
+
+	padding: 40rpx 30rpx 40rpx 30rpx;
+	border-radius: 20rpx;
+}
+.tour_index_grade_content {
+	display: flex;
+	justify-content: space-between;
+	margin-right: 200rpx;
+	color: #815c3f;
+}
+.tour_intro {
+	margin-top: 20rpx;
+}
+

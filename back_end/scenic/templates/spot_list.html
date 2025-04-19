@@ -1,0 +1,27 @@
+{% extends 'common.html' %}
+{% block content %}
+<h1>景点列表</h1>
+{#    <img src="{% static 'img/帕恰狗.png' %}" alt="">#}
+<a href="/api/spot/add/">新增景点</a>
+<table border="1">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>景点名称</th>
+            <th>景点描述</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in scenic_spots %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td><a href="/api/spot/{{ item.id }}/edit/">编辑</a></td>
+                <td><a href="/api/spot/delete/?nid={{ item.id }}">删除</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
