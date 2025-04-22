@@ -87,6 +87,12 @@
 				"navigationBarTitleText": "我的门票",
 				"navigationStyle": "custom"
 			}
+		}, {
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationBarTitleText": "AI Assistant",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"tabBar": {

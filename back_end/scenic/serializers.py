@@ -100,3 +100,28 @@ class TourOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = TourOrder
         fields = '__all__'
+
+class StayRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StayRecord
+        fields = "__all__"
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatMessage
+        fields = ['message_id', 'message_type', 'content', 'timestamp']
+
+
+class ChatSessionSerializer(serializers.ModelSerializer):
+    messages = ChatMessageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = ChatSession
+        fields = ['session_id', 'user', 'scenic', 'created_at', 'last_message_time', 'active', 'messages', 'current_intent']
+
+
+class ChatIntentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatIntent
+        fields = ['intent_id', 'message', 'intent_type', 'confidence', 'parameters']
