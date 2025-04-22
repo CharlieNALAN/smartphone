@@ -58,12 +58,20 @@
 				</view>
 			</scroll-view>
 		</view>
+		
+		<!-- 添加AI聊天悬浮按钮 -->
+		<chat-button :position-bottom="200"></chat-button>
 	</view>
 
 </template>
 
 <script>
+	import ChatButton from '@/components/ChatButton.vue'
+	
 	export default {
+		components: {
+			ChatButton
+		},
 		data() {
 			return {
 				scenic_index: getApp().globalData.global_scenic_id - 1,

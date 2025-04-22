@@ -165,3 +165,59 @@ class StayRecord(models.Model):
     scenic = models.ForeignKey(Scenic, on_delete=models.CASCADE)
     attraction = models.ForeignKey(Attraction, on_delete=models.CASCADE)
     check_in_time = models.DateTimeField()
+
+class ChatSession(models.Model):
+    """用户聊天会话表"""
+    session_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="user")
+    scenic = models.ForeignKey(Scenic, on_delete=models.CASCADE, verbose_name="scenic", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="created_time")
+    last_message_time = models.DateTimeField(auto_now=True, verbose_name="last_message_time")
+    active = models.BooleanField(default=True, verbose_name="active_status")
+    current_intent = models.CharField(max_length=20, null=True, blank=True)  # 记录当前对话上下文状态
+
+    def __str__(self):
+        return f"Chat {self.session_id} - {self.user.username}"
+    
+    def __str__(self):
+        return f"{self.intent_type} - {self.confidence}"
+
+
+class ChatMessage(models.Model):
+    """聊天消息表"""
+    MESSAGE_TYPE_CHOICES = (
+        ('user', 'user_message'),
+        ('ai', 'ai_reply'),
+    )
+    
+    message_id = models.AutoField(primary_key=True)
+    session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages', verbose_name="session")
+    message_type = models.CharField(max_length=10, choices=MESSAGE_TYPE_CHOICES, verbose_name="message_type")
+    content = models.TextField(verbose_name="content")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="timestamp")
+    
+    class Meta:
+        ordering = ['timestamp']
+    
+    def __str__(self):
+        return f"{self.message_type} - {self.timestamp}"
+
+
+class ChatIntent(models.Model):
+    """用户意图分类表"""
+    INTENT_TYPE_CHOICES = (
+        ('route', 'route recommendation'),
+        ('real_time', 'real-time info'),
+        ('attraction_info', 'attraction info'),
+        ('ticket_info', 'ticket info'),
+        ('general', 'general message'),
+    )
+    
+    intent_id = models.AutoField(primary_key=True)
+    message = models.OneToOneField(ChatMessage, on_delete=models.CASCADE, related_name='intent', verbose_name="关联消息")
+    intent_type = models.CharField(max_length=20, choices=INTENT_TYPE_CHOICES, verbose_name="intent_type")
+    confidence = models.FloatField(verbose_name="confidence", default=0.0)
+    parameters = models.JSONField(verbose_name="parameters", null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.intent_type} - {self.confidence}"
