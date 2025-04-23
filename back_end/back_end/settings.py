@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'scenic',
         'USER': 'root',
-        'PASSWORD': 'czl20020308',
+        'PASSWORD': 'rootroot',
         'HOST': '127.0.0.1',
         'PORT': 3306,
     }

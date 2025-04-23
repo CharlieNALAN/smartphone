@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "wel-one": "/components/WelOne",
-    "register": "/components/Register"
-  }
-}

@@ -74,3 +74,11 @@ project.xcworkspace
 *.swp
 *.swo
 .project
+
+__pycache__/
+# Uniapp
+unpackage/
+node_modules/
+dist/
+.DS_Store
+.hbuilderx/

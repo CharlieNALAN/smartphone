@@ -80,7 +80,7 @@
 <style lang="scss">
 	/*每个页面公共css */
 	@import "uview-ui/index.scss";
-	@import "/wxcomponents/vant/common/index.wxss";
+	@import "/wxcomponents/vant/common/index.css";
 
 	.col-horizontal-center {
 		display: flex;
