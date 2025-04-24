@@ -112,8 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'UTC'
 
@@ -131,14 +131,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# 允许的来源
+# Allowed origins
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
-    # 添加其他允许的域，如有需要
+    # Add other allowed domains if needed
 ]
 
-# 允许携带身份验证信息（例如 Cookies）
-# 支持跨域配置开始
+# Allow carrying authentication information (such as Cookies)
+# Cross-origin configuration start
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 

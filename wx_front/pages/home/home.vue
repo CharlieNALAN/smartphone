@@ -18,7 +18,7 @@
 			</block>
 		</uni-nav-bar>
 		<view class="notice">
-			<uni-notice-bar show-icon scrollable text="香港公园郁金香花展已开启预约通道!注意开放时间为8:00-17:00,请各位游客安排好游览时间!">
+			<uni-notice-bar show-icon scrollable text="Hong Kong Park Tulip Flower Show has opened reservation channel! Note that opening hours are 8:00-17:00, please plan your visit time accordingly!">
 			</uni-notice-bar>
 		</view>
 		<view class="category">
@@ -29,10 +29,10 @@
 			</navigator>
 		</view>
 		<view class="container">
-			<uni-section class="futitle" title="热门景点" titleFontSize="30rpx">
+			<uni-section class="futitle" title="Popular Attractions" titleFontSize="30rpx">
 				<template v-slot:right>
 					<navigation class="title-more" url="/pages/recommend/recommend">
-						<text>查看全部</text>
+						<text>View All</text>
 						<uni-icons type="right" size="18"></uni-icons>
 					</navigation>
 				</template>
@@ -44,10 +44,10 @@
 			</scroll-view>
 		</view>
 		<view class="container container-color">
-			<uni-section class="futitle" title="精品路线" titleFontSize="30rpx">
+			<uni-section class="futitle" title="Featured Routes" titleFontSize="30rpx">
 				<template v-slot:right>
 					<navigation class="title-more" url="/pages/recommend/recommend">
-						<text>查看全部</text>
+						<text>View All</text>
 						<uni-icons type="right" size="18"></uni-icons>
 					</navigation>
 				</template>
@@ -59,7 +59,7 @@
 			</scroll-view>
 		</view>
 		
-		<!-- 添加AI聊天悬浮按钮 -->
+		<!-- Add AI chat floating button -->
 		<chat-button :position-bottom="200"></chat-button>
 	</view>
 
@@ -75,7 +75,7 @@
 		data() {
 			return {
 				scenic_index: getApp().globalData.global_scenic_id - 1,
-				scenic_array: ['维多利亚港', '太平山顶', '迪士尼乐园', '海洋公园', '南丫岛'],
+				scenic_array: ['Victoria Harbour', 'Victoria Peak', 'Disneyland', 'Ocean Park', 'Lamma Island'],
 				swiperList: [
 					'/static/swiper/seven.png',
 					'/static/swiper/eight.png',
@@ -100,25 +100,25 @@
 				menuList: [{
 					id: 1,
 					url: '/pages/map/map',
-					text: '地图导览',
+					text: 'Map Guide',
 					src: '/static/home_menu/map.png',
 					opentype: 'switchTab',
 				}, {
 					id: 2,
 					url: '/pages/attraction/attraction',
-					text: '景点介绍',
+					text: 'Attraction Info',
 					src: '/static/home_menu/info.png',
 					opentype: 'navigate',
 				}, {
 					id: 3,
 					url: '/pages/ticket/ticket',
-					text: '预约购票',
+					text: 'Book Tickets',
 					src: '/static/home_menu/ticket.png',
 					opentype: 'navigate',
 				}, {
 					id: 4,
 					url: '/pages/track/track',
-					text: '历史足迹',
+					text: 'History Trail',
 					src: '/static/home_menu/track.png',
 					opentype: 'switchTab',
 				}]
@@ -127,7 +127,7 @@
 		},
 		methods: {
 			bindPickerChange: function(e) {
-				console.log('picker发送选择改变，携带值为', e.detail.value);
+				console.log('picker sends selection change, carrying value', e.detail.value);
 				this.scenic_index = e.detail.value;
 				getApp().globalData.global_scenic_id = parseInt(this.scenic_index) + 1;
 			},
@@ -198,45 +198,54 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		box-sizing: border-box;
-		margin: 5rpx 8rpx 0;
-
 	}
 
 	.icon {
-		width: 90rpx;
-		height: 90rpx;
-		margin-bottom: 15rpx;
+		width: 100rpx;
+		height: 100rpx;
 	}
 
 	.text {
-		font-size: 26rpx;
-		color: #666;
+		font-size: 24rpx;
+		margin-top: 10rpx;
 	}
 
-	.futitle {
-		background-color: aquamarine;
+	.container {
+		margin: 0 36rpx;
+	}
+
+	.container-color {
+		color: #888;
 	}
 
 	.title-more {
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
+		align-items: center;
+		font-size: 26rpx;
+		color: #666;
 	}
 
-	.container {
-		width: 100%;
-		/* 根据需求调整容器宽度 */
-		overflow: hidden;
+	.title {
+		font-weight: bold;
+		margin-top: 40rpx;
+		margin-bottom: 14rpx;
+	}
+
+	.futitle {
+		margin-top: 30rpx;
+		margin-bottom: 20rpx;
 	}
 
 	.hot-image {
+		width: 190rpx;
+		height: 230rpx;
+		margin-right: 28rpx;
 		display: inline-block;
-		padding: 5px;
-		margin-right: 10px;
 	}
 
 	.hot-image image {
-		height: 300rpx;
+		width: 100%;
+		height: 100%;
+		border-radius: 5px;
 	}
 </style>

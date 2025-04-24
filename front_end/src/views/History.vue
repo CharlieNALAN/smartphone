@@ -4,10 +4,10 @@
         <el-container>
             <el-main>
                 <el-radio-group v-model="radio">
-                    <el-radio :label="1">今日</el-radio>
-                    <el-radio :label="2">昨日</el-radio>
-                    <el-radio :label="3">本周</el-radio>
-                    <el-radio :label="4">本月</el-radio>
+                    <el-radio :label="1">Today</el-radio>
+                    <el-radio :label="2">Yesterday</el-radio>
+                    <el-radio :label="3">This Week</el-radio>
+                    <el-radio :label="4">This Month</el-radio>
                 </el-radio-group>
                 <!-- <div class="echarts1" ref="areaChart" style="width:500px; height: 300px;"></div> -->
                 <!-- <router-view></router-view> -->

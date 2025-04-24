@@ -2,7 +2,7 @@
 	"easycom": {
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -19,72 +19,72 @@
 		{
 			"path": "pages/recommend/recommend",
 			"style": {
-				"navigationBarTitleText": "推荐",
+				"navigationBarTitleText": "Recommendations",
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/map/map",
 			"style": {
-				"navigationBarTitleText": "地图",
+				"navigationBarTitleText": "Map",
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/track/track",
 			"style": {
-				"navigationBarTitleText": "足迹",
+				"navigationBarTitleText": "Trail",
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/user/user",
 			"style": {
-				"navigationBarTitleText": "我的",
+				"navigationBarTitleText": "My Profile",
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/detail/detail",
 			"style": {
-				"navigationBarTitleText": "景点信息",
+				"navigationBarTitleText": "Attraction Details",
 				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/attraction/attraction",
 			"style": {
-				"navigationBarTitleText": "景点列表",
+				"navigationBarTitleText": "Attraction List",
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/ticket/ticket",
 			"style": {
-				"navigationBarTitleText": "景点购票",
+				"navigationBarTitleText": "Ticket Purchase",
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/buy/buy",
 			"style": {
-				"navigationBarTitleText": "购票详情",
+				"navigationBarTitleText": "Purchase Details",
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/book/book",
 			"style": {
-				"navigationBarTitleText": "预约详情",
+				"navigationBarTitleText": "Booking Details",
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/booked/booked",
 			"style": {
-				"navigationBarTitleText": "我的预约",
+				"navigationBarTitleText": "My Bookings",
 				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/bought/bought",
 			"style": {
-				"navigationBarTitleText": "我的门票",
+				"navigationBarTitleText": "My Tickets",
 				"navigationStyle": "custom"
 			}
 		}, {
@@ -102,27 +102,27 @@
 		"backgroundColor": "#ffffff",
 		"list": [{
 			"pagePath": "pages/home/home",
-			"text": "首页",
+			"text": "Home",
 			"iconPath": "static/tabbar_icon/home.png",
 			"selectedIconPath": "static/tabbar_icon/home-active.png"
 		}, {
 			"pagePath": "pages/recommend/recommend",
-			"text": "推荐",
+			"text": "Recommend",
 			"iconPath": "static/tabbar_icon/recommend.png",
 			"selectedIconPath": "static/tabbar_icon/recommend-active.png"
 		}, {
 			"pagePath": "pages/map/map",
-			"text": "地图",
+			"text": "Map",
 			"iconPath": "static/tabbar_icon/flag.png",
 			"selectedIconPath": "static/tabbar_icon/flag-active.png"
 		}, {
 			"pagePath": "pages/track/track",
-			"text": "足迹",
+			"text": "Trail",
 			"iconPath": "static/tabbar_icon/history.png",
 			"selectedIconPath": "static/tabbar_icon/history-active.png"
 		}, {
 			"pagePath": "pages/user/user",
-			"text": "我的",
+			"text": "Profile",
 			"iconPath": "static/tabbar_icon/user.png",
 			"selectedIconPath": "static/tabbar_icon/user-active.png"
 		}]

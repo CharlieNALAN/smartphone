@@ -40,7 +40,7 @@
 			virtualHost: true
 		},
 		props: {
-			// 接收父组件传递的景点数据
+			// Attraction data passed from parent component
 			initialData: {
 				type: Array,
 				default: () => []
@@ -48,7 +48,7 @@
 		},
 		data() {
 			return {
-				recommend_datas: [], // 存放推荐景点数据
+				recommend_datas: [], // Recommended attraction data
 				currentIndex: 0,
 				strategy: 1,
 				global_scenic_id: getApp().globalData.global_scenic_id,

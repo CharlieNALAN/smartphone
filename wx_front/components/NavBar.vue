@@ -24,7 +24,7 @@
 		methods: {
 			back() {
 				uni.navigateBack({
-					delta: 1  // 返回的页面数，1表示返回上一页
+					delta: 1  // Number of pages to return, 1 means return to the previous page
 				})
 			}
 		}

@@ -21,13 +21,13 @@ export default new VueRouter({
             name: ' Index',
             component: ()=>import('../views/Index.vue'),
             children: [
-                //景区实时情况
+                // Real-time scenic area conditions
                 {
                     path:'/home',
                     name:'Home',
                     component:()=>import('../views/Home.vue'),
                 },
-                //景点信息管理
+                // Attraction information management
                 {
                     path: '/attractions',
                     name: 'Attractions',
@@ -38,13 +38,13 @@ export default new VueRouter({
                     name: 'AttractionAdd',
                     component: ()=>import('../views/AttractionAdd.vue')
                 },
-                //景区历史数据中心
+                // Scenic area historical data center
                 {
                     path: '/history',
                     name: 'History',
                     component: ()=>import('../views/History.vue')
                 },
-                //推荐策略配置
+                // Recommendation strategy configuration
                 {
                     path: '/strategy',
                     name: 'Strategy',

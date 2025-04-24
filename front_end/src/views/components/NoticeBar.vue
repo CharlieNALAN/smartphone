@@ -26,9 +26,9 @@ export default {
   data() {
     return {
       ulList: [
-        { msg: '景点 太子湾公园 流量已超过警戒值，请配置策略！' },
-        { msg: '景点 灵隐寺 流量已超过警戒值，请配置策略！' },
-        { msg: '景点 一线天 流量已超过警戒值，请配置策略！' },
+        { msg: 'Attraction Prince Bay Park has exceeded the warning value, please configure strategy!' },
+        { msg: 'Attraction Lingyin Temple has exceeded the warning value, please configure strategy!' },
+        { msg: 'Attraction First Gorge has exceeded the warning value, please configure strategy!' },
       ],
       play: false
     }

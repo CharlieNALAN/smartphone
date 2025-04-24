@@ -35,10 +35,10 @@ class ChatSessionView(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        """创建新会话"""
+        """Create new session"""
         user_id = request.data.get('user_id')
         scenic_id = request.data.get('scenic_id')
-        # 添加这一行来获取初始意图类型
+        # Add this line to get the initial intent type
         initial_intent = request.data.get('initial_intent')
 
         print(f"Initial intent: {initial_intent}")
@@ -51,11 +51,11 @@ class ChatSessionView(APIView):
         if scenic_id:
             scenic = get_object_or_404(Scenic, scenic_id=scenic_id)
         
-        # 创建会话时设置初始意图
+        # Set initial intent when creating session
         session = ChatSession.objects.create(
             user=user,
             scenic=scenic,
-            current_intent=initial_intent  # 设置初始意图类型
+            current_intent=initial_intent  # Set initial intent type
         )
         
         serializer = ChatSessionSerializer(session)
@@ -81,46 +81,46 @@ class ChatMessageView(APIView):
         return Response(serializer.data)
     
     def post(self, request, session_id):
-        """发送新消息并获取AI回复"""
+        """Send new message and get AI reply"""
         session = get_object_or_404(ChatSession, session_id=session_id)
         user_message = request.data.get('message')
-        intent_type = request.data.get('intent_type')  # 接收前端传递的意图类型
-        is_prompt = request.data.get('is_prompt', False)  # 判断是否为提示消息
+        intent_type = request.data.get('intent_type')  # Receive intent type passed from frontend
+        is_prompt = request.data.get('is_prompt', False)  # Check if it's a prompt message
         print(f"Send new message after click button, Intent type: {intent_type}")
         if not user_message:
             return Response({"error": "The message content cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # 保存用户消息
+        # Save user message
         user_chat_message = ChatMessage.objects.create(
             session=session,
             message_type='user',
             content=user_message
         )
         
-        # 如果前端指定了意图类型，直接使用
+        # If intent type is specified by frontend, use it directly
         if intent_type and intent_type in ['route', 'real_time', 'attraction_info', 'ticket_info']:
             intent = ChatIntent.objects.create(
                 message=user_chat_message,
                 intent_type=intent_type,
-                confidence=0.9,  # 高置信度
+                confidence=0.9,  # High confidence
                 parameters={}
             )
-            # 更新会话状态
+            # Update session state
             session.current_intent = intent_type
             session.save()
         else:
-            # 正常处理用户意图
+            # Normal user intent processing
             intent = self._process_intent(user_chat_message)
         
-        # 如果是prompt消息，直接返回该消息而不生成新回复
+        # If it's a prompt message, return this message directly without generating new reply
         if is_prompt:
             ai_chat_message = ChatMessage.objects.create(
                 session=session,
                 message_type='ai',
-                content=user_message  # 使用传入的提示文本
+                content=user_message  # Use the provided prompt text
             )
         else:
-            # 根据用户意图生成回复
+            # Generate reply based on user intent
             ai_response = self._generate_response(intent, session)
             ai_chat_message = ChatMessage.objects.create(
                 session=session,
@@ -128,10 +128,10 @@ class ChatMessageView(APIView):
                 content=ai_response
             )
         
-        # 更新会话时间
+        # Update session time
         session.save()
         
-        # 返回消息
+        # Return message
         result = {
             'user_message': ChatMessageSerializer(user_chat_message).data,
             'ai_message': ChatMessageSerializer(ai_chat_message).data
@@ -160,7 +160,7 @@ class ChatMessageView(APIView):
     def _process_intent(self, message):
         """Process the user intent"""
         session = message.session
-        previous_intent = session.current_intent  # 获取上一次的意图
+        previous_intent = session.current_intent  # Get previous intent
 
         print(f"Previous intent: {previous_intent}")
     
@@ -198,47 +198,42 @@ class ChatMessageView(APIView):
                     # Try to get any JSON data block
                     json_blocks = re.findall(r'\{[\s\S]*?\}', response)
                     for block in json_blocks:
-                        # Check if it contains the necessary fields
-                        if '"intent_type"' in block or "'intent_type'" in block:
-                            try:
-                                # Try to handle the double quotes version
-                                intent_data = json.loads(block)
+                        try:
+                            # Try to clean and parse each block
+                            cleaned_block = block.replace("'", '"')
+                            intent_data = json.loads(cleaned_block)
+                            if 'intent_type' in intent_data:
                                 break
-                            except json.JSONDecodeError:
-                                # Try to convert single quotes to double quotes
-                                modified_block = block.replace("'", '"')
-                                intent_data = json.loads(modified_block)
-                                break
+                        except json.JSONDecodeError:
+                            continue
                     else:
-                        raise ValueError("Can't find valid intent data")
-                    
-                intent_type = intent_data.get('intent_type', 'general')
-                parameters = intent_data.get('parameters', {}) or {}
-                confidence = intent_data.get('confidence', 0.5)
-        except Exception as e:
-            print(f"解析JSON失败: {e}")
-            # When parsing fails, use the default value
-            intent_type, parameters, confidence = 'general', {}, 0.5
-        print(f"Intent type: {intent_type}, Parameters: {parameters}, Confidence: {confidence}")
-
-        if previous_intent == 'route' and (intent_type == 'general' or confidence < 0.6):
-            # 如果上一个意图是路线推荐，而当前意图不明确或置信度低
-            # 则假定用户仍在讨论路线
-            intent_type = 'route'
-            confidence = max(confidence, 0.7)  # 提高置信度
-            # 从用户消息中提取可能的参数
-            if 'preference' not in parameters and re.search(r'like|enjoy|prefer|love', message.content, re.I):
-                # 尝试提取用户偏好
-                parameters['preference'] = message.content
-                
-            if 'time_constraint' not in parameters and re.search(r'day|hour|time|week|month', message.content, re.I):
-                # 尝试提取时间约束
-                parameters['time_constraint'] = message.content
+                        # If no valid JSON block is found, use a default intent
+                        print("No valid JSON intent data found, using default.")
+                        intent_data = {
+                            'intent_type': 'general',
+                            'parameters': {},
+                            'confidence': 0.5
+                        }
+        except json.JSONDecodeError as e:
+            print(f"JSON parse error: {e}")
+            print(f"Raw JSON data: {json_str}")
+            # Fallback to general intent
+            intent_data = {
+                'intent_type': 'general',
+                'parameters': {},
+                'confidence': 0.5
+            }
+            
+        # Create or update intent record
+        intent_type = intent_data.get('intent_type', 'general')
+        parameters = intent_data.get('parameters', {})
+        confidence = float(intent_data.get('confidence', 0.5))
         
-        # 更新会话状态
+        # Update session with current intent type
         session.current_intent = intent_type
         session.save()
-        # Create an intent record
+        
+        # Create intent record
         intent = ChatIntent.objects.create(
             message=message,
             intent_type=intent_type,
@@ -247,237 +242,250 @@ class ChatMessageView(APIView):
         )
         
         return intent
-
-    def _generate_general_response(self, intent: ChatIntent) -> str:
-        """
-        General reply generated using LLM
-        """
-        prompt = (
-            f"You are a scenic AI assistant, the user said:\"{intent.message.content}\"，"
-            "Please reply briefly and effectively, do not include any programming code or other non-related content."
-        )
-        return self._call_llm_api(prompt, max_tokens=256, temperature=0.7)
     
-    """
-        TODO: 
-        Need modify after the database information is confirmed
-    """
     def _extract_attraction(self, content):
-        """Extract the attraction name from the user message"""
-        # The actual implementation may need to use NER or more complex algorithms
-        # Here is a simple implementation, matching the existing attraction names in the database
+        """Extract attraction information from content"""
         attractions = Attraction.objects.all()
+        found_attractions = []
+        
         for attraction in attractions:
             if attraction.attraction_name in content:
-                return attraction.attraction_name
-        return None
+                found_attractions.append({
+                    'id': attraction.attraction_id,
+                    'name': attraction.attraction_name,
+                    'scenic_id': attraction.scenic_id
+                })
+                
+        return found_attractions
     
     def _generate_response(self, intent, session):
-        """Generate a reply based on the intent"""
+        """Generate response based on intent"""
         intent_type = intent.intent_type
         parameters = intent.parameters
         scenic = session.scenic
-        print(f"Scenic: {scenic}")
-        attractions = Attraction.objects.filter(scenic_id=scenic.scenic_id)
-
+        
         if intent_type == 'route':
+            attractions = []
+            if scenic:
+                attractions = Attraction.objects.filter(scenic=scenic).values(
+                    'attraction_id', 'attraction_name', 'address', 'description', 'category',
+                    'fee', 'open_time', 'close_time', 'status', 'count'
+                )
             return self._generate_route_recommendation(parameters, attractions, scenic)
+            
         elif intent_type == 'real_time':
             return self._generate_real_time_info(scenic)
+            
         elif intent_type == 'attraction_info':
             return self._generate_attraction_info(parameters, scenic)
+            
         elif intent_type == 'ticket_info':
             return self._generate_ticket_info(parameters)
-        else:
+            
+        else:  # general intent or fallback
             return self._generate_general_response(intent)
-
-    """
-        TODO: 
-        Need modify after the all prompt is confirmed
-    """ 
+    
     def _extract_response(self, response: str, response_type: str = "general") -> str:
-        patterns = {
-            "route": r'Ok, I have recommended a tour route for you:[\s\S]*?(?=\s*\*/|$)',
-            "ticket_info": r'Ok, the ticket information of the attraction is as follows:[\s\S]*?(?=\s*\*/|$)',
-            "general": r'[\s\S]+?(?=\s*\*/|$)'
-        }
-
-        # Get the current response type pattern, if not specified, use general
-        pattern = patterns.get(response_type, patterns["general"])
+        """Extract response from LLM output"""
+        # If the response is already clean, return it directly
+        if not response.strip().startswith('```') and '```' not in response:
+            return response.strip()
         
-        # Try to use the corresponding pattern to extract text
-        matches = re.findall(pattern, response, re.DOTALL)
+        # Try to extract content from markdown code blocks
+        code_pattern = r'```(?:json)?\s*([\s\S]*?)\s*```'
+        matches = re.findall(code_pattern, response)
         
         if matches:
-            return matches[0].strip()
+            # Extract the content from the first code block
+            extracted = matches[0].strip()
+            
+            # For JSON responses, parse and format nicely
+            if response_type == "json":
+                try:
+                    data = json.loads(extracted)
+                    return json.dumps(data, indent=2, ensure_ascii=False)
+                except json.JSONDecodeError:
+                    # If it's not valid JSON, return as is
+                    return extracted
+            
+            return extracted
         
-        # If no specific pattern is matched, try to clean the response text
-        # Remove various programming language code blocks, HTML tags, and comment symbols
-        cleaned_text = re.sub(r'<.*?>|/\*|\*/|#include.*?|int main\(\).*?{|public class.*?{|print\(|console\.log|println!', '', response)
-        cleaned_text = re.sub(r'return 0;|std::cout <<|Console\.WriteLine|printf\(|echo|let result =|"}|<!DOCTYPE.*?>', '', cleaned_text)
-        
-        cleaned_text = re.sub(r'\/\/.*?$|\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->', '', cleaned_text, flags=re.MULTILINE)
-        
-        cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
-        
-        if cleaned_text:
-            return cleaned_text
-        
-        return response
-
+        # If no code blocks found, return the original response with markdown removed
+        return re.sub(r'```.*?```', '', response, flags=re.DOTALL).strip()
     
     def _generate_route_recommendation(self, parameters: Dict[str, Any], attractions: List[Dict[str, Any]], scenic=None) -> str:
-        """Generate route recommendation reply"""
-        # Create a formatted string of scenic attractions information as the knowledge base of LLM
-        attractions_info = ""
-        for attraction in attractions:
-            status_text = "Opening" if attraction.status == 1 else "Closed" if attraction.status == 0 else "Crowded"
-            attractions_info += f"Attraction ID: {attraction.attraction_id}, Name: {attraction.attraction_name}, Description: {attraction.description}, " \
-                            f"Category: {attraction.category}, Status: {status_text}, " \
-                            f"Opens: {attraction.open_time}to{attraction.close_time}, " \
-                            f"Current number of visitors: {attraction.count}, Maximum capacity: {attraction.flow_limit}\n"
-        # print(f"Attractions info: {attractions_info}")
-        
-        # When location is empty, use scenic.scenic_name as the user's location
-        location = parameters.get("location", "")
-        if not location and scenic:
-            location = scenic.scenic_name
-        
-        preference = parameters.get("preference", "")
-        time_constraint = parameters.get("time_constraint", "")
-        print(f"Location: {location}, Preference: {preference}, Time constraint: {time_constraint}")
-        prompt = f"""
-            You are a scenic AI assistant. Please recommend a tour route for the user based on the following information:
-            User's requirements:
-            - Location: {location}
-            - Preference: {preference}
-            - Time constraint: {time_constraint}
-            
-            Available attractions information:
-            {attractions_info}
-
-            Please note the following rules:
-            1. Only recommend attractions that are in the database and match the user's location.
-            2. Do not recommend attractions that are not in the database.
-            3. Do not recommend attractions that are closed.
-            4. For attractions that are crowded, you can recommend them but need to add a special prompt.
-            5. According to the user's time constraint, plan an appropriate number of attractions.
-            6. Try to meet the user's keyword preferences.
-            7. Provide a reasonable itinerary and recommend a visit time for each attraction.
-            8. Give a brief reason for the route.
-
-            Please start your answer with "Ok, I have recommended a tour route for you:"
-        """
-        response = self._call_llm_api(prompt, max_tokens=1024, temperature=0.7)
-        print(f"Route recommendation response: {response}")
-        route_recommendation = self._extract_response(response, "route")
-
-        if route_recommendation:
-            return route_recommendation
-        else:
-            return "Sorry, I couldn't generate a tour route for you. Please try again later."
-
-    """
-        TODO: 
-        Need to improve, haven't tested yet
-    """
-    def _generate_real_time_info(self, scenic):
-        """Generate real-time information reply"""
-        if not scenic:
-            return "Please select a scenic first, I can provide you with real-time information."
-            
-        # Get the real-time visitor flow data of the attractions in the scenic
-        attractions = Attraction.objects.filter(scenic_id=scenic.scenic_id).order_by('-count')
-        
+        """Generate route recommendation based on parameters"""
         if not attractions:
-            return f"Sorry, I couldn't get the real-time data of {scenic.scenic_name}."
+            return "I don't have information about attractions in this area. Could you specify which scenic area you're interested in?"
+        
+        prompt = (
+            "You are a tour guide AI assistant. Generate a personalized route recommendation based on the attractions and user preferences.\n\n"
+            "Instructions:\n"
+            "1. Analyze the available attractions and user preferences.\n"
+            "2. Create a route that makes geographical sense (nearby attractions grouped together).\n"
+            "3. Consider time constraints, visitor count, and attraction categories.\n"
+            "4. Output a route with 3-5 attractions (unless user specified otherwise).\n"
+            "5. For each attraction, include:\n"
+            "   - Name\n"
+            "   - Brief description (if available)\n"
+            "   - Recommended visit duration\n"
+            "6. Add a brief introduction at the beginning and conclusion at the end.\n"
+            "7. Keep the format clear and easy to read.\n\n"
+        )
+        
+        # Add user preferences if available
+        if parameters:
+            prompt += "User preferences:\n"
+            for key, value in parameters.items():
+                prompt += f"- {key}: {value}\n"
+            prompt += "\n"
+        
+        # Add attractions information
+        prompt += "Available attractions:\n"
+        for idx, attraction in enumerate(attractions, 1):
+            prompt += f"{idx}. {attraction['attraction_name']}\n"
+            if 'category' in attraction:
+                category_map = {1: "Natural Scenery", 2: "Historical Sites", 3: "Cultural Heritage", 4: "Entertainment Experience"}
+                category = category_map.get(attraction['category'], "Other")
+                prompt += f"   - Category: {category}\n"
+            if 'count' in attraction:
+                prompt += f"   - Current visitors: {attraction['count']}\n"
+            if 'fee' in attraction and attraction['fee']:
+                prompt += f"   - Entrance fee: {attraction['fee']} HKD\n"
+            if 'open_time' in attraction and 'close_time' in attraction:
+                prompt += f"   - Hours: {attraction['open_time']} - {attraction['close_time']}\n"
+            if 'description' in attraction and attraction['description']:
+                desc = attraction['description']
+                if len(desc) > 100:
+                    desc = desc[:100] + "..."
+                prompt += f"   - Description: {desc}\n"
+        
+        response = self._call_llm_api(prompt, max_tokens=800)
+        return self._extract_response(response)
+    
+    def _generate_real_time_info(self, scenic):
+        """Generate real-time information about the scenic area"""
+        if not scenic:
+            return "I need to know which scenic area you're asking about to provide real-time information. Could you please specify?"
+        
+        # Get real-time attraction data
+        attractions = Attraction.objects.filter(scenic=scenic)
+        
+        prompt = (
+            "You are a tour guide AI assistant. Provide real-time information about the scenic area and its attractions.\n\n"
+            f"Scenic Area: {scenic.scenic_name}\n\n"
+            "Attraction status:\n"
+        )
+        
+        for attraction in attractions:
+            status_text = "Not Open"
+            if attraction.status == 1:
+                status_text = "Open"
+            elif attraction.status == 2:
+                status_text = "Crowd Warning"
             
-        most_crowded = attractions.first()
-        least_crowded = attractions.last()
+            prompt += f"- {attraction.attraction_name}:\n"
+            prompt += f"  * Status: {status_text}\n"
+            prompt += f"  * Current visitors: {attraction.count}\n"
+            prompt += f"  * Visitor limit: {attraction.flow_limit}\n"
+            prompt += f"  * Hours: {attraction.open_time} - {attraction.close_time}\n"
         
-        response = f"{scenic.scenic_name} current real-time situation:\n\n"
-        response += f"- The most crowded attraction: {most_crowded.attraction_name}, about {most_crowded.count} people\n"
-        response += f"- The least crowded attraction: {least_crowded.attraction_name}, about {least_crowded.count} people\n\n"
+        prompt += "\nBased on this information, provide a helpful summary of the current situation in the scenic area. Mention which attractions are crowded, which are good to visit now, and any other relevant information to help the visitor plan their day."
         
-        # Add a warning for crowded attractions
-        alert_attractions = attractions.filter(status=2)
-        if alert_attractions:
-            response += "⚠️ The following attractions are currently crowded, please visit them during off-peak hours:\n"
-            for attraction in alert_attractions:
-                response += f"- {attraction.attraction_name}\n"
-                
-        return response
+        response = self._call_llm_api(prompt, max_tokens=600)
+        return self._extract_response(response)
     
     def _generate_attraction_info(self, parameters, scenic):
-        """Generate attraction information reply"""
-        attraction_name = parameters.get('location')
+        """Generate information about specific attractions"""
+        # Try to extract attraction name from parameters
+        attraction_name = None
+        if parameters and 'attraction' in parameters:
+            attraction_name = parameters['attraction']
+        elif parameters and 'location' in parameters:
+            attraction_name = parameters['location']
         
         if attraction_name:
-            # Query specific attractions
-            try:
-                attraction = Attraction.objects.get(attraction_name=attraction_name)
-                response = f"📍 {attraction.attraction_name}\n\n"
-                response += f"{attraction.description}\n\n"
-                response += f"Address: {attraction.address}\n"
-                response += f"Open time: {attraction.open_time.strftime('%H:%M')} - {attraction.close_time.strftime('%H:%M')}\n"
-                if attraction.fee:
-                    response += f"Ticket price: ¥{attraction.fee}\n"
-                if attraction.phone:
-                    response += f"Phone: {attraction.phone}\n"
-                return response
-            except Attraction.DoesNotExist:
-                return f"Sorry, I couldn't find information about {attraction_name}."
+            # Look for matching attractions
+            attractions = Attraction.objects.filter(attraction_name__icontains=attraction_name)
+            if not attractions.exists() and scenic:
+                # If no direct match, try to find within the current scenic area
+                attractions = Attraction.objects.filter(scenic=scenic)
         elif scenic:
-            # If no specific attraction is specified but there is a scenic, introduce the scenic
-            attractions = Attraction.objects.filter(scenic_id=scenic.scenic_id)[:5]
-            response = f"{scenic.scenic_name} main attractions:\n\n"
-            for i, attraction in enumerate(attractions, 1):
-                response += f"{i}. {attraction.attraction_name}\n"
-            response += f"\nTo learn more about specific attractions, please ask for the attraction name directly."
-            return response
+            # If no specific attraction mentioned, return info about all attractions in the scenic area
+            attractions = Attraction.objects.filter(scenic=scenic)
         else:
-            return "What specific attraction or scenic information would you like to know?"
+            return "I need more information about which attraction you're interested in. Could you specify a name or ask about a specific category of attractions?"
+        
+        prompt = "You are a tour guide AI assistant. Provide helpful information about the following attraction(s):\n\n"
+        
+        for attraction in attractions:
+            prompt += f"Attraction: {attraction.attraction_name}\n"
+            prompt += f"Address: {attraction.address}\n"
+            if attraction.description:
+                prompt += f"Description: {attraction.description}\n"
+            prompt += f"Category: {attraction.get_category_display()}\n"
+            if attraction.fee:
+                prompt += f"Entrance Fee: {attraction.fee} HKD\n"
+            prompt += f"Opening Hours: {attraction.open_time} - {attraction.close_time}\n"
+            prompt += f"Current Status: {attraction.get_status_display()}\n"
+            prompt += f"Current Visitors: {attraction.count} / {attraction.flow_limit}\n\n"
+        
+        prompt += "Provide a helpful and informative response about these attractions. Include practical information that would be useful for visitors."
+        
+        response = self._call_llm_api(prompt, max_tokens=700)
+        return self._extract_response(response)
     
     def _generate_ticket_info(self, parameters: Dict[str, Any]):
-        """Generate ticket information reply"""
-        prompt = f"""
-            You are a scenic AI assistant. Please provide ticket information based on the following information:
-
-            The attraction the user asked for: {parameters.get('location', '')}
-            
-            If the attraction needs to buy tickets, please start your answer with "Ok, the ticket information of the attraction is as follows:" and provide the following information:
-            1. Ticket price
-            2. Discounts
-            3. Purchase methods
-            4. Other related information
-
-            If the attraction does not need to buy tickets, please say that the attraction is free and visitors do not need to buy tickets to enter.
-
-            Only return the ticket information text, do not include any programming code or other non-related content.
-        """
-        response = self._call_llm_api(prompt, max_tokens=512, temperature=0.7)
-
-        ticket_info = self._extract_response(response, "ticket_info")
-
-        if ticket_info:
-            return ticket_info
+        """Generate information about tickets"""
+        # Try to extract attraction name from parameters
+        attraction_name = None
+        if parameters and 'attraction' in parameters:
+            attraction_name = parameters['attraction']
+        
+        if attraction_name:
+            # Look for matching attractions with ticket prices
+            attractions = Attraction.objects.filter(
+                attraction_name__icontains=attraction_name,
+                fee__isnull=False
+            )
         else:
-            return "Sorry, I couldn't generate ticket information for you. Please try again later."
+            # If no specific attraction mentioned, return general ticket info
+            attractions = Attraction.objects.filter(fee__isnull=False).exclude(fee=0)[:5]
+        
+        if not attractions.exists():
+            return "I couldn't find ticket information for the specified attraction. Most attractions in Hong Kong are free to visit, but some may require admission fees. Could you specify which attraction you're interested in?"
+        
+        prompt = "You are a tour guide AI assistant. Provide helpful information about tickets for the following attraction(s):\n\n"
+        
+        for attraction in attractions:
+            prompt += f"Attraction: {attraction.attraction_name}\n"
+            prompt += f"Entrance Fee: {attraction.fee} HKD\n"
+            prompt += f"Opening Hours: {attraction.open_time} - {attraction.close_time}\n"
+            prompt += f"Current Status: {attraction.get_status_display()}\n\n"
+        
+        prompt += "Additional Information:\n"
+        prompt += "- Tickets can be purchased through our app by visiting the 'Book Tickets' section.\n"
+        prompt += "- Some attractions may offer discounts for children, students, and seniors.\n"
+        prompt += "- It's recommended to book tickets in advance during peak season or holidays.\n\n"
+        
+        prompt += "Provide a helpful response about ticket information for these attractions. Include practical booking advice."
+        
+        response = self._call_llm_api(prompt, max_tokens=600)
+        return self._extract_response(response)
     
     def _generate_general_response(self, intent):
-        """Generate a general reply"""
-        user_message = intent.message.content
-
-        prompt = f"""
-            You are a scenic AI assistant. Please generate a brief reply based on the user's message.
-            User's message: {user_message}
-            Please avoid using programming code or other non-related content.
-        """
-        response = self._call_llm_api(prompt, max_tokens=512, temperature=0.7)
-
-        general_response = self._extract_response(response)
-
-        if general_response:
-            return general_response
-        else:
-            return "Sorry, I didn't fully understand your message. You can try asking about attraction recommendations, real-time visitor flow, or ticket information."
+        """Generate a general response when no specific intent is identified"""
+        message = intent.message.content
+        
+        prompt = (
+            "You are a helpful tour guide AI assistant for Hong Kong. Respond to the following user query in a friendly and helpful manner:\n\n"
+            f"User: {message}\n\n"
+            "Instructions:\n"
+            "1. If the query is about Hong Kong tourism, provide helpful information.\n"
+            "2. If you're unsure, suggest topics the user might be interested in such as attractions, routes, or tickets.\n"
+            "3. Keep your response concise and informative.\n"
+            "4. If appropriate, suggest that the user can ask about specific attractions, real-time information, route recommendations, or tickets.\n"
+        )
+        
+        response = self._call_llm_api(prompt, max_tokens=400)
+        return self._extract_response(response)

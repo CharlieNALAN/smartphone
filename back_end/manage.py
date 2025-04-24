@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
-# 项目的管理，启动项目，创建app，数据管理
+# Project management, starting the project, creating apps, data management
 import os
 import sys
 

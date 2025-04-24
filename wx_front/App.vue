@@ -2,7 +2,7 @@
 	export default {
 		data() {
 			return {
-				// global_strategy_id: null // 存放全局策略ID
+				// global_strategy_id: null // store global strategy ID
 				global_strategy_id: 1,
 				global_scenic_id: null,
 				globalData: {
@@ -18,7 +18,7 @@
 		},
 		onLaunch: function() {
 			// this.fetchRecommendationStrategy();
-			// setInterval(this.fetchRecommendationStrategy, 60000); // 每分钟发送一次请求
+			// setInterval(this.fetchRecommendationStrategy, 60000); // Send request every minute
 			setInterval(() => {
 				this.$store.dispatch('getUserLocation');
 			}, 60000);
@@ -37,15 +37,15 @@
 			})
 			this.globalData.resourceURL = 'http://127.0.0.1:8000/'
 			
-			// 尝试从本地存储获取用户信息
+			// Try to get user info from local storage
 			try {
 				const userInfoStr = uni.getStorageSync('userInfo');
 				if (userInfoStr) {
 					this.globalData.userInfo = JSON.parse(userInfoStr);
-					console.log('从本地存储加载用户信息:', this.globalData.userInfo);
+					console.log('Loading user info from local storage:', this.globalData.userInfo);
 				}
 			} catch (e) {
-				console.error('读取用户信息失败:', e);
+				console.error('Failed to read user info:', e);
 			}
 		},
 		onShow: function() {
@@ -61,9 +61,9 @@
 			// 		url: 'http://localhost:8000/get_recommendation_strategy',
 			// 		method: 'GET',
 			// 		success: (res) => {
-			// 			// 处理响应，更新全局状态或进行其他操作
+			// 			// Process response, update global state or perform other operations
 			// 			if (res.data.strategy_id) {
-			// 				this.global_strategy_id = res.data.strategy_id; // 将策略ID存储在全局状态中
+			// 				this.global_strategy_id = res.data.strategy_id; // Store strategy ID in global state
 			// 			} else {
 			// 				console.error('Strategy ID not found in response.');
 			// 			}
@@ -78,7 +78,7 @@
 </script>
 
 <style lang="scss">
-	/*每个页面公共css */
+	/*every page's common css */
 	@import "uview-ui/index.scss";
 	@import "/wxcomponents/vant/common/index.css";
 
@@ -106,13 +106,13 @@
 	
 	.junyun {
 		display: flex;
-		/* 使得子元素垂直排列 */
+		/* Make child elements arrange vertically */
 		justify-content: space-between;
-		/* 子元素垂直均匀分布 */
+		/* Child elements distributed evenly vertically */
 	}
 	
 	.kaoyou {  
 	    display: flex;  
-	    justify-content: flex-end; /* 使子元素靠右对齐 */  
+	    justify-content: flex-end; /* Make child elements align to the right */  
 	} 
 </style>

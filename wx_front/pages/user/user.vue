@@ -2,7 +2,7 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>我的</view>
+				<view>Profile</view>
 			</template>
 		</NavBar>
 		<view class="container_head">
@@ -13,18 +13,18 @@
 				<view class="inf_content">
 					<view class="user-row">
 						<view class="user-info-container">
-							<text class="user_info">{{ userInfo.username || '游客' }}</text>
+							<text class="user_info">{{ userInfo.username || 'Guest' }}</text>
 							<view v-if="isLoggedIn" class="user-badge">
 								<uni-icons type="checkmarkempty" size="12" color="#fff"></uni-icons>
-								<text>已认证</text>
+								<text>Verified</text>
 							</view>
 							<view v-else class="guest-badge">
 								<uni-icons type="info" size="12" color="#fff"></uni-icons>
-								<text>未登录</text>
+								<text>Not Logged In</text>
 							</view>
 						</view>
 						<button v-if="!isLoggedIn" class="login-btn" size="mini" @click="showLoginPopup">
-							<text>登录</text>
+							<text>Login</text>
 							<uni-icons type="arrowright" size="14" color="#333"></uni-icons>
 						</button>
 					</view>
@@ -40,7 +40,7 @@
 					<view v-else class="guest-info">
 						<view class="guest-tip">
 							<uni-icons type="info" size="14" color="rgba(255,255,255,0.8)"></uni-icons>
-							<text>登录后可查看更多功能</text>
+							<text>Login to access more features</text>
 						</view>
 					</view>
 				</view>
@@ -59,7 +59,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="person-filled" size="28"></uni-icons>
-							<text>个人资料</text>
+							<text>Personal Information</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -67,7 +67,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="compose" size="28"></uni-icons>
-							<text>导游申请</text>
+							<text>Guide Application</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -75,7 +75,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="more" size="28"></uni-icons>
-							<text>关于软件</text>
+							<text>About App</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -83,7 +83,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="help" size="28"></uni-icons>
-							<text>获取帮助</text>
+							<text>Get Help</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -91,7 +91,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="closeempty" size="28" color="#dd524d"></uni-icons>
-							<text class="logout-text">退出登录</text>
+							<text class="logout-text">Logout</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -99,29 +99,29 @@
 		</view>
 		<view>
 			<uni-popup ref="inputDialog" type="dialog">
-				<uni-popup-dialog ref="inputClose" mode="input" title="输入邀请码" placeholder="请输入内容"
+				<uni-popup-dialog ref="inputClose" mode="input" title="Enter Invitation Code" placeholder="Please enter content"
 					@confirm="dialogInputConfirm">
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
 		<view class="last_view"></view>
 		
-		<!-- 登录弹窗 -->
+		<!-- Login Popup -->
 		<uni-popup ref="loginPopup" type="center">
 			<view class="login-popup">
-				<view class="login-title">账号登录</view>
+				<view class="login-title">Account Login</view>
 				<view class="login-form">
 					<view class="input-item">
-						<text class="input-label">手机号</text>
-						<input type="number" v-model="loginForm.phone" placeholder="请输入手机号" maxlength="11" />
+						<text class="input-label">Phone</text>
+						<input type="number" v-model="loginForm.phone" placeholder="Enter phone number" maxlength="11" />
 					</view>
 					<view class="input-item">
-						<text class="input-label">密码</text>
-						<input type="password" v-model="loginForm.password" placeholder="请输入密码" />
+						<text class="input-label">Password</text>
+						<input type="password" v-model="loginForm.password" placeholder="Enter password" />
 					</view>
 					<view class="login-btns">
-						<button class="submit-btn" :loading="isLogging" @click="handleLogin">登录</button>
-						<button class="cancel-btn" @click="closeLoginPopup">取消</button>
+						<button class="submit-btn" :loading="isLogging" @click="handleLogin">Login</button>
+						<button class="cancel-btn" @click="closeLoginPopup">Cancel</button>
 					</view>
 				</view>
 			</view>
@@ -151,38 +151,38 @@
 				menuList: [{
 					id: 1,
 					url: '/pages/bought/bought',
-					text: '我的门票',
+					text: 'My Tickets',
 					src: 'menpiao.png',
 					opentype: 'navigate',
 				}, {
 					id: 2,
 					url: '/pages/booked/booked',
-					text: '我的预约',
+					text: 'My Bookings',
 					src: 'yuyue.png',
 					opentype: 'navigate',
 				}, {
 					id: 3,
 					url: '/pages/map/map',
-					text: '订单记录',
+					text: 'Order History',
 					src: 'suoyou.png',
 					opentype: 'navigate',
 				}, {
 					id: 4,
 					url: '/pages/track/track',
-					text: '消息中心',
+					text: 'Message Center',
 					src: 'xiaoxi.png',
 					opentype: 'navigate',
 				}]
 			}
 		},
 		onShow() {
-			// 每次显示页面时都获取最新的用户信息
+			// Get latest user info each time page is shown
 			this.getUserInfo();
 		},
 		methods: {
-			// 显示登录弹窗
+			// Show login popup
 			showLoginPopup() {
-				// 清空表单
+				// Clear form
 				this.loginForm = {
 					phone: '',
 					password: ''
@@ -190,17 +190,24 @@
 				this.$refs.loginPopup.open();
 			},
 			
-			// 关闭登录弹窗
+			// Close login popup
 			closeLoginPopup() {
 				this.$refs.loginPopup.close();
 			},
 			
-			// 处理登录
+			// Handle login
 			handleLogin() {
-				// 表单验证
-				if (!this.loginForm.phone || !this.loginForm.password) {
+				// Form validation
+				if (!this.loginForm.phone) {
 					uni.showToast({
-						title: '请填写完整信息',
+						title: 'Please enter phone number',
+						icon: 'none'
+					});
+					return;
+				}
+				if (!this.loginForm.password) {
+					uni.showToast({
+						title: 'Please enter password',
 						icon: 'none'
 					});
 					return;
@@ -208,61 +215,50 @@
 				
 				this.isLogging = true;
 				
-				// 发送登录请求
+				// Send login request
 				uni.request({
-					url: 'http://localhost:8000/api/user/login',
+					url: getApp().globalData.resourceURL + 'login/',
 					method: 'POST',
 					data: {
 						phone: this.loginForm.phone,
 						password: this.loginForm.password
 					},
-					success: res => {
-						console.log('登录响应:', res.data);
-						
-						if (res.data.status === 'success') {
-							// 登录成功，保存用户信息
-							if (res.data.user) {
-								// 将用户信息存储到全局数据和本地存储
-								const app = getApp();
-								if (app.globalData) {
-									app.globalData.userInfo = res.data.user;
-									console.log('已将用户信息保存到全局变量:', app.globalData.userInfo);
-								} else {
-									console.error('globalData未定义');
-								}
+					success: (res) => {
+						if (res.statusCode === 200 && res.data.code === 0) {
+							// Login successful
+							this.userInfo = res.data.data;
+							this.isLoggedIn = true;
+							
+							// Save user info to local storage
+							try {
+								uni.setStorageSync('userInfo', JSON.stringify(this.userInfo));
 								
-								uni.setStorageSync('userInfo', JSON.stringify(res.data.user));
-								console.log('已将用户信息保存到本地存储');
+								// Assign to global variable
+								getApp().globalData.userInfo = this.userInfo;
 								
-								// 更新当前页面的用户信息
-								this.userInfo = res.data.user;
-								this.isLoggedIn = true;
-								
-								// 关闭登录弹窗
-								this.closeLoginPopup();
-								
-								// 显示成功提示
 								uni.showToast({
-									title: '登录成功',
+									title: 'Login successful',
 									icon: 'success'
 								});
+								
+								// Close popup
+								this.closeLoginPopup();
+								
+							} catch (e) {
+								console.error('Failed to save user info', e);
 							}
 						} else {
-							// 登录失败，显示错误信息
-							let errorMsg = '登录失败';
-							if (res.data.message) {
-								errorMsg = res.data.message;
-							}
+							// Login failed
 							uni.showToast({
-								title: errorMsg,
+								title: res.data.msg || 'Login failed, please try again',
 								icon: 'none'
 							});
 						}
 					},
-					fail: err => {
-						console.error('登录请求失败', err);
+					fail: (err) => {
+						console.error('Login request failed', err);
 						uni.showToast({
-							title: '网络连接失败',
+							title: 'Network error, please try again',
 							icon: 'none'
 						});
 					},
@@ -271,424 +267,331 @@
 					}
 				});
 			},
-			// 获取用户信息
+			
+			// Get user info
 			getUserInfo() {
-				// 尝试从全局变量获取用户信息
-				const app = getApp();
-				console.log('获取用户信息 - 当前全局变量:', app.globalData);
-				
-				if (app.globalData && app.globalData.userInfo) {
-					this.userInfo = app.globalData.userInfo;
-					this.isLoggedIn = true;
-					console.log('从全局变量获取到用户信息:', this.userInfo);
-					return;
-				}
-				
-				// 如果全局变量中没有，尝试从本地存储获取
 				try {
 					const userInfoStr = uni.getStorageSync('userInfo');
-					console.log('本地存储中的用户信息:', userInfoStr || '无');
-					
 					if (userInfoStr) {
 						this.userInfo = JSON.parse(userInfoStr);
 						this.isLoggedIn = true;
-						console.log('从本地存储获取到用户信息:', this.userInfo);
-						
-						// 同时更新全局变量
-						if (app.globalData) {
-							app.globalData.userInfo = this.userInfo;
-							console.log('已更新全局变量中的用户信息');
-						} else {
-							console.error('globalData未定义');
-						}
+						console.log('Loaded user info from storage:', this.userInfo);
 					} else {
-						this.isLoggedIn = false;
 						this.userInfo = {
-							username: '游客',
-							phone: '未登录'
+							username: '',
+							phone: ''
 						};
-						console.log('未找到已登录的用户信息');
+						this.isLoggedIn = false;
 					}
 				} catch (e) {
-					console.error('获取用户信息失败', e);
-					this.isLoggedIn = false;
+					console.error('Failed to get user info', e);
 					this.userInfo = {
-						username: '游客',
-						phone: '未登录'
+						username: '',
+						phone: ''
 					};
+					this.isLoggedIn = false;
 				}
 			},
-			// 退出登录
+			
+			// Logout
 			logout() {
 				uni.showModal({
-					title: '提示',
-					content: '确定要退出登录吗？',
+					title: 'Confirm',
+					content: 'Are you sure you want to logout?',
 					success: (res) => {
 						if (res.confirm) {
-							// 清除用户信息
+							// Clear user info
 							uni.removeStorageSync('userInfo');
-							console.log('已清除本地存储的用户信息');
 							
-							const app = getApp();
-							if (app.globalData) {
-								app.globalData.userInfo = null;
-								console.log('已清除全局变量中的用户信息');
-							} else {
-								console.error('globalData未定义');
-							}
+							// Clear global variable
+							getApp().globalData.userInfo = null;
 							
-							this.isLoggedIn = false;
+							// Reset page state
 							this.userInfo = {
-								username: '游客',
-								phone: '未登录'
+								username: '',
+								phone: ''
 							};
+							this.isLoggedIn = false;
 							
 							uni.showToast({
-								title: '已退出登录',
+								title: 'Logged out successfully',
 								icon: 'success'
 							});
 						}
 					}
 				});
 			},
+			
+			// Show guide application dialog
 			guidesign_dialog() {
-				this.$refs.inputDialog.open()
+				if (!this.isLoggedIn) {
+					uni.showToast({
+						title: 'Please login first',
+						icon: 'none'
+					});
+					return;
+				}
+				
+				this.$refs.inputDialog.open();
 			},
+			
+			// Handle invitation code confirmation
 			dialogInputConfirm(val) {
-				this.$refs.inputDialog.close()
-				console.log(val)
-				uni.showToast({
-					icon: 'success',
-					title: '导游申请提交!'
-				})
-			},
+				if (!val) {
+					uni.showToast({
+						title: 'Please enter invitation code',
+						icon: 'none'
+					});
+					return;
+				}
+				
+				// Verify invitation code
+				uni.request({
+					url: getApp().globalData.resourceURL + 'validate_invitation_code/',
+					method: 'POST',
+					data: {
+						user_id: this.userInfo.id || this.userInfo.user_id,
+						code: val
+					},
+					success: (res) => {
+						if (res.statusCode === 200 && res.data.valid) {
+							uni.showToast({
+								title: 'Application submitted successfully',
+								icon: 'success'
+							});
+						} else {
+							uni.showToast({
+								title: 'Invalid invitation code',
+								icon: 'none'
+							});
+						}
+					},
+					fail: (err) => {
+						console.error('Verification request failed', err);
+						uni.showToast({
+							title: 'Network error, please try again',
+							icon: 'none'
+						});
+					}
+				});
+			}
 		}
 	}
 </script>
 
 <style>
-	.category {
-		margin-top: 20rpx;
-		padding: 10rpx 0;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		flex-wrap: wrap;
-		min-height: 128rpx;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.category-item {
-		width: 160rpx;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		box-sizing: border-box;
-		margin: 5rpx 8rpx 0;
-	}
-
-	.icon {
-		width: 90rpx;
-		height: 90rpx;
-		margin-bottom: 15rpx;
-	}
-
-	.list {
-		padding-top: 20rpx;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background: #f0f0f0;
-	}
-	uni-list {
-		width: 95%;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-	uni-list-item {
-		width: 100%;
-	}
-
-	.nav_title {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex: 1;
-		font-size: 18px;
-	}
-
-	.parent_catainer {
-		background: #f0f0f0;
-	}
-
-	/* 头部背景图片 */
 	.container_head {
-		height: 370rpx;
-		width: 100%;
-		display: flex;
-		justify-content: flex-end;
-		align-items: flex-end;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-		position: relative;
-		overflow: hidden;
-	}
-
-	.container_head::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-					linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-		background-size: 20px 20px;
-		transform: rotate(-15deg);
-		opacity: 0.5;
-	}
-
-	.head_img {
-		position: absolute;
-		width: 100%;
-		height: 370rpx;
+		height: 200rpx;
+		margin-top: 100rpx;
+		background-color: #3bcb98;
+		padding: 30rpx;
+		border-radius: 10px;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		color: white;
 	}
 
 	.head_pers_info {
-		height: 200rpx;
-		width: 100%;
-		margin-bottom: 50rpx;
-		justify-content: left;
 		display: flex;
-		align-items: center;
 		flex-direction: row;
-		position: relative;
-		z-index: 1;
-		backdrop-filter: blur(5px);
-		padding: 20rpx 0;
+		align-items: center;
 	}
 
 	.head_pic {
-		margin-left: 5%;
-		position: relative;
-		border: 3rpx solid rgba(255, 255, 255, 0.3);
-		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-		border-radius: 60rpx;
-		overflow: hidden;
-		background: rgba(255, 255, 255, 0.1);
+		width: 100rpx;
+		height: 100rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.head_pic_content {
-		position: absolute;
-		width: 110rpx;
-		height: 110rpx;
-		border-radius: 55rpx;
-		background-color: white;
-		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+		width: 90rpx;
+		height: 90rpx;
+		border-radius: 50%;
 	}
 
 	.inf_content {
-		display: flex;
-		flex-direction: column;
-		margin-left: 24rpx;
-		align-items: flex-start;
-		justify-content: center;
-		color: #ffffff;
-		padding-bottom: 5rpx;
-		width: 75%;
+		width: 550rpx;
+		margin-left: 20rpx;
 	}
 
 	.user-row {
 		display: flex;
-		flex-direction: row;
+		justify-content: space-between;
 		align-items: center;
-		width: 100%;
+		margin-bottom: 10rpx;
 	}
 
 	.user-info-container {
 		display: flex;
 		align-items: center;
-		gap: 10rpx;
-	}
-
-	.user-badge {
-		display: flex;
-		align-items: center;
-		background: rgba(255, 255, 255, 0.2);
-		padding: 4rpx 12rpx;
-		border-radius: 20rpx;
-		font-size: 20rpx;
-		color: #fff;
-		gap: 4rpx;
-	}
-
-	.user-detail {
-		display: flex;
-		flex-direction: column;
-		gap: 8rpx;
-		margin-top: 8rpx;
-	}
-
-	.phone-info {
-		display: flex;
-		align-items: center;
-		gap: 8rpx;
-	}
-
-	.phone-text {
-		font-size: 28rpx;
-		color: #fff;
-	}
-
-	.user-id {
-		font-size: 24rpx;
-		color: rgba(255, 255, 255, 0.8);
 	}
 
 	.user_info {
-		text-align: left;
-		font-size: 36rpx;
+		font-size: 18px;
 		font-weight: bold;
-		margin-bottom: 0;
-		margin-right: 15rpx;
-		color: #fff;
-		text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+		margin-right: 10rpx;
+	}
+
+	.user-badge, .guest-badge {
+		display: flex;
+		align-items: center;
+		padding: 2rpx 10rpx;
+		border-radius: 15rpx;
+		font-size: 10px;
+	}
+
+	.user-badge {
+		background-color: rgba(255, 255, 255, 0.3);
 	}
 
 	.guest-badge {
-		display: flex;
-		align-items: center;
-		background: rgba(255, 255, 255, 0.15);
-		padding: 4rpx 12rpx;
-		border-radius: 20rpx;
-		font-size: 20rpx;
-		color: rgba(255, 255, 255, 0.9);
-		gap: 4rpx;
-	}
-
-	.guest-info {
-		margin-top: 12rpx;
-	}
-
-	.guest-tip {
-		display: flex;
-		align-items: center;
-		gap: 8rpx;
-		font-size: 24rpx;
-		color: rgba(255, 255, 255, 0.8);
-		background: rgba(255, 255, 255, 0.1);
-		padding: 8rpx 16rpx;
-		border-radius: 30rpx;
+		background-color: rgba(0, 0, 0, 0.2);
 	}
 
 	.login-btn {
 		display: flex;
 		align-items: center;
+		padding: 0 15rpx;
+		height: 50rpx;
+		line-height: 50rpx;
+		background-color: #ffffff;
+		border-radius: 25rpx;
+		font-size: 12px;
+	}
+
+	.user-detail, .guest-info {
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.phone-info {
+		display: flex;
+		align-items: center;
+		margin-bottom: 5rpx;
+	}
+
+	.phone-text {
+		margin-left: 5rpx;
+	}
+
+	.guest-tip {
+		display: flex;
+		align-items: center;
+	}
+
+	.category {
+		margin: 40rpx 0;
+		padding: 10rpx 0;
+		display: flex;
+		flex-direction: row;
 		justify-content: center;
-		gap: 4rpx;
-		background: linear-gradient(to right, #96fbc4, #f9f586);
-		color: #333;
+		flex-wrap: wrap;
+	}
+
+	.category-item {
+		width: 25%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 20rpx;
+	}
+
+	.icon {
+		width: 90rpx;
+		height: 90rpx;
+		margin-bottom: 10rpx;
+	}
+
+	.text {
 		font-size: 24rpx;
-		padding: 4rpx 20rpx;
-		line-height: 1.5;
-		height: auto;
-		border-radius: 30rpx;
-		font-weight: normal;
-		margin-top: 0;
-		margin-left: auto;
-		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-		transition: all 0.3s ease;
+		color: #666;
 	}
 
-	.login-btn:active {
-		transform: scale(0.95);
-		box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.15);
-	}
-
-	.family_info_ct_phone {
-		text-align: center;
-		justify-content: center;
-		font-size: 28rpx;
-		margin-bottom: 2rpx;
-		margin-top: -10px;
+	.list {
+		margin: 0 30rpx;
 	}
 
 	.list_item_contain {
 		display: flex;
-		justify-content: center;
 		align-items: center;
-		margin-left: 30rpx;
 	}
 
 	.list_item_contain text {
-		margin-left: 10rpx;
+		margin-left: 20rpx;
+		font-size: 14px;
 	}
-	
+
 	.logout-text {
 		color: #dd524d;
 	}
 
 	.last_view {
-		background: #f0f0f0;
-		width: 100%;
-		height: 1200rpx;
+		height: 80rpx;
 	}
-	
-	/* 登录弹窗样式 */
+
 	.login-popup {
-		width: 650rpx;
-		background-color: #fff;
-		border-radius: 20rpx;
+		width: 600rpx;
 		padding: 30rpx;
+		background-color: #fff;
+		border-radius: 10px;
 	}
-	
+
 	.login-title {
-		font-size: 36rpx;
-		text-align: center;
+		font-size: 18px;
 		font-weight: bold;
-		margin-bottom: 40rpx;
-	}
-	
-	.login-form {
-		width: 100%;
-	}
-	
-	.input-item {
+		text-align: center;
 		margin-bottom: 30rpx;
 	}
-	
+
+	.login-form {
+		margin-top: 20rpx;
+	}
+
+	.input-item {
+		margin-bottom: 20rpx;
+	}
+
 	.input-label {
-		font-size: 28rpx;
-		color: #333;
+		font-size: 14px;
+		color: #666;
 		margin-bottom: 10rpx;
 		display: block;
 	}
-	
-	.input-item input {
+
+	input {
 		height: 80rpx;
-		border: 1px solid #ddd;
-		border-radius: 8rpx;
+		border: 1px solid #eee;
+		border-radius: 5px;
 		padding: 0 20rpx;
-		font-size: 28rpx;
+		font-size: 14px;
 	}
-	
+
 	.login-btns {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 40rpx;
+		margin-top: 30rpx;
 	}
-	
+
+	.submit-btn, .cancel-btn {
+		flex: 1;
+		height: 80rpx;
+		line-height: 80rpx;
+		text-align: center;
+		border-radius: 5px;
+		font-size: 14px;
+	}
+
 	.submit-btn {
-		width: 45%;
-		background: linear-gradient(to right, #96fbc4, #f9f586);
-		color: #333;
-		border: none;
+		background-color: #3bcb98;
+		color: #fff;
+		margin-right: 10rpx;
 	}
-	
+
 	.cancel-btn {
-		width: 45%;
-		background-color: #f5f5f5;
+		background-color: #f8f8f8;
 		color: #666;
-		border: none;
+		margin-left: 10rpx;
 	}
 </style>
