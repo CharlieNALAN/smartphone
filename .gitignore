@@ -82,3 +82,4 @@ node_modules/
 dist/
 .DS_Store
 .hbuilderx/
+wx_front/.DS_Store
