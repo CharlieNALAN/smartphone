@@ -109,11 +109,42 @@
 			},
 			addFootprint(selectedDateTime) {
 				// 假设这里调用了后端接口，将景点加入用户的历史足迹信息中，并且设置 manual_check 为 true
+				// 获取当前用户ID
+				let userId = null;
+				const app = getApp();
+				
+				// 从全局变量获取用户信息
+				if (app.globalData && app.globalData.userInfo) {
+					userId = app.globalData.userInfo.id || app.globalData.userInfo.user_id;
+				}
+				
+				// 如果全局变量中没有，尝试从本地存储获取
+				if (!userId) {
+					try {
+						const userInfoStr = uni.getStorageSync('userInfo');
+						if (userInfoStr) {
+							const userInfo = JSON.parse(userInfoStr);
+							userId = userInfo.id || userInfo.user_id;
+						}
+					} catch (e) {
+						console.error('获取用户信息失败', e);
+					}
+				}
+				
+				// 如果没有获取到用户ID，提示用户登录
+				if (!userId) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					});
+					return;
+				}
+				
 				uni.request({
 					url: `${this.resource_url}footprint/`,
 					method: 'POST',
 					data: {
-						user: 1,
+						user: userId,
 						scenic: this.global_scenic_id,
 						attraction: this.selectedAttraction.attraction_id,
 						check_in_time: selectedDateTime, // 用户选择的日期时间

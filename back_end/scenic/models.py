@@ -20,11 +20,11 @@ class User(models.Model):
 
 
 class ScenicID(models.IntegerChoices):
-    WEST_LAKE = 1, '西湖'
-    WEST_XI_WETLAND = 2, '西溪湿地'
-    QIAN_DAO_LAKE = 3, '千岛湖'
-    LIANG_ZU_ancient_city = 4, '良渚古城'
-    DA_MING_MOUNTAIN = 5, '大明山'
+    WEST_LAKE = 1, '维多利亚港'
+    WEST_XI_WETLAND = 2, '太平山顶'
+    QIAN_DAO_LAKE = 3, '香港迪士尼乐园'
+    LIANG_ZU_ancient_city = 4, '海洋公园'
+    DA_MING_MOUNTAIN = 5, '南丫岛'
 
 
 class Scenic(models.Model):

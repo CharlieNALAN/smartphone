@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Attraction',
             fields=[
                 ('attraction_id', models.AutoField(primary_key=True, serialize=False)),
-                ('scenic_id', models.IntegerField(choices=[(1, '西湖'), (2, '西溪湿地'), (3, '千岛湖'), (4, '良渚古城'), (5, '大明山')])),
+                ('scenic_id', models.IntegerField(choices=[(1, '维多利亚港'), (2, '太平山顶'), (3, '香港迪士尼乐园'), (4, '海洋公园'), (5, '南丫岛')])),
                 ('attraction_name', models.CharField(max_length=255, verbose_name='景点名称')),
                 ('attraction_lng', models.FloatField()),
                 ('attraction_lat', models.FloatField()),
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Scenic',
             fields=[
-                ('scenic_id', models.IntegerField(choices=[(1, '西湖'), (2, '西溪湿地'), (3, '千岛湖'), (4, '良渚古城'), (5, '大明山')], primary_key=True, serialize=False)),
+                ('scenic_id', models.IntegerField(choices=[(1, '维多利亚港'), (2, '太平山顶'), (3, '香港迪士尼乐园'), (4, '海洋公园'), (5, '南丫岛')], primary_key=True, serialize=False)),
                 ('scenic_name', models.CharField(max_length=255)),
                 ('scenic_lng', models.FloatField()),
                 ('scenic_lat', models.FloatField()),
