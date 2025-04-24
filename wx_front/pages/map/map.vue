@@ -193,6 +193,8 @@
 						if (res.statusCode === 200) {
 							// 将从后端获取的数据存储到attractions中
 							this.attractions = res.data.results;
+							console.log('获取到的景点数据:', JSON.stringify(this.attractions));
+							console.log('景点数量:', this.attractions.length);
 							// 渲染地图标记点
 							this.renderMarkers();
 						} else {
@@ -206,15 +208,33 @@
 			},
 			// 渲染地图标记点
 			renderMarkers() {
-				const markers = this.attractions.map((attraction) => ({
+				const markers = this.attractions.map((attraction, index) => ({
 					id: attraction.attraction_id,
 					latitude: attraction.attraction_lat,
 					longitude: attraction.attraction_lng,
 					name: attraction.attraction_name,
-					width: 22, // 设置标记宽度
-					height: 30, // 设置标记高度
+					title: attraction.attraction_name,
+					callout: {
+						content: attraction.attraction_name,
+						color: '#000000',
+						fontSize: 12,
+						borderRadius: 4,
+						padding: 5,
+						bgColor: '#ffffff',
+						display: 'ALWAYS'
+					},
+					iconPath: '/static/tabbar_icon/location.png', // 使用已有图标
+					width: 32, // 增大标记宽度
+					height: 32, // 增大标记高度
+					zIndex: index + 1, // 为每个标记点设置不同的层级，避免重叠问题
+					anchor: {
+						x: 0.5,
+						y: 1
+					}
 				}));
 				this.markers = markers;
+				console.log('标记点数量:', markers.length);
+				console.log('标记点详情:', JSON.stringify(markers));
 			},
 			// 显示景点信息卡片
 			showAttractionInfo(e) {
