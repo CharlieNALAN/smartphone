@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 # from .views import scenic_spot_list
 # from .views import get_scenic, get_attraction, get_attractions_list
 # from .views import *
+from scenic.views.chat import ChatMessageView, ChatSessionView
 from scenic.views.scenic import *
 from scenic.views.attraction import *
 from scenic.views.manager import *
@@ -49,4 +50,7 @@ urlpatterns = [
     path('footprint/user/<int:user_id>/scenic/<int:scenic_id>/', get_footprints_by_user_scenic, name='get_footprints_by_user_scenic'),
     path('footprint/<int:pk>/mark_checked/', FootprintViewSet.as_view({'post': 'mark_checked'}), name='footprint-mark-checked'),
     # path('create_ticket_with_visitors/', create_ticket_with_visitors),
+    path('chat/sessions/', ChatSessionView.as_view(), name='chat-sessions'),
+    path('chat/sessions/<int:session_id>/', ChatSessionView.as_view(), name='chat-session-detail'),
+    path('chat/sessions/<int:session_id>/messages/', ChatMessageView.as_view(), name='chat-messages'),
 ] 
