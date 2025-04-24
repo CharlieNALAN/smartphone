@@ -18,7 +18,7 @@
 			</block>
 		</uni-nav-bar>
 		<view class="notice">
-			<uni-notice-bar show-icon scrollable text="太子湾公园郁金香花展已开启预约通道!注意开放时间为8:00-17:00,请各位游客安排好游览时间!">
+			<uni-notice-bar show-icon scrollable text="香港公园郁金香花展已开启预约通道!注意开放时间为8:00-17:00,请各位游客安排好游览时间!">
 			</uni-notice-bar>
 		</view>
 		<view class="category">
@@ -38,7 +38,7 @@
 				</template>
 			</uni-section>
 			<scroll-view :scroll-x="true" style="white-space: nowrap;">
-				<view v-for="item in swiperList" class="hot-image">
+				<view v-for="item in scenicList" class="hot-image">
 					<image :src="item"></image>
 				</view>
 			</scroll-view>
@@ -75,20 +75,27 @@
 		data() {
 			return {
 				scenic_index: getApp().globalData.global_scenic_id - 1,
-				scenic_array: ['西湖', '西溪湿地', '千岛湖', '良渚古城', '大明山'],
+				scenic_array: ['维多利亚港', '太平山顶', '迪士尼乐园', '海洋公园', '南丫岛'],
 				swiperList: [
-					'/static/swiper/one.png',
-					'/static/swiper/two.png',
-					'/static/swiper/three.png',
-					'/static/swiper/four.png',
-					'/static/swiper/five.png',
+					'/static/swiper/seven.png',
+					'/static/swiper/eight.png',
+					'/static/swiper/nine.png',
+					'/static/swiper/ten.png',
+					'/static/swiper/eleven.png',
+				],
+				scenicList: [
+					'/static/swiper/victoriaharbour2.jpg',
+					'/static/swiper/victoriapeak2.jpg',
+					'/static/swiper/disneyland1.jpg',
+					'/static/swiper/oceanpark2.jpg',
+					'/static/swiper/lammaisland1.jpg',
 				],
 				routeList: [
-					'http://localhost:8000/media/route/spring.png',
-					'http://localhost:8000/media/route/sakura.jpg',
-					'/static/swiper/three.png',
-					'/static/swiper/four.png',
-					'/static/swiper/five.png',
+					'/static/swiper/route1.png',
+					'/static/swiper/route2.png',
+					'/static/swiper/route3.png',
+					'/static/swiper/route4.png',
+					'/static/swiper/route5.png',
 				],
 				menuList: [{
 					id: 1,

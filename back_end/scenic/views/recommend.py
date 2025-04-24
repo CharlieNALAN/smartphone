@@ -7,7 +7,10 @@ from ..utils.pagination import Pagination
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from ..serializers import *
+import logging
 
+# 配置日志记录器
+logger = logging.getLogger(__name__)
 
 class RecommendationStrategyViewSet(viewsets.ModelViewSet):
     queryset = RecommendationStrategy.objects.all()
@@ -44,22 +47,52 @@ class RecommendationItemViewSet(viewsets.ViewSet):
 
 def get_recommendations(request, strategy):
     if request.method == 'GET':
-        # 获取推荐列表数据
-        recommendations = RecommendationItem.objects.filter(strategy_id=strategy).order_by('order')
-        # 构造推荐数据的 JSON 格式
-        data = []
-        for recommendation in recommendations:
-            data.append({
-                'attraction_id': recommendation.attraction.attraction_id,
-                'scenic_name': recommendation.attraction.scenic.scenic_name,
-                'attraction_name': recommendation.attraction.attraction_name,
-                'latitude': recommendation.attraction.attraction_lat,
-                'longitude': recommendation.attraction.attraction_lng,
-                'address': recommendation.attraction.address,
-                'image': recommendation.attraction.image.url if recommendation.attraction.image else '',
-                # 其他景点信息
-            })
-        return JsonResponse({'recommendations': data})
+        try:
+            # 获取推荐列表数据
+            recommendations = RecommendationItem.objects.filter(strategy_id=strategy).order_by('order')
+            
+            # 构造推荐数据的 JSON 格式
+            data = []
+            for recommendation in recommendations:
+                try:
+                    # 添加异常处理，防止访问不存在的景点
+                    attraction = recommendation.attraction
+                    data.append({
+                        'attraction_id': attraction.attraction_id,
+                        'scenic_name': attraction.scenic.scenic_name,
+                        'attraction_name': attraction.attraction_name,
+                        'latitude': attraction.attraction_lat,
+                        'longitude': attraction.attraction_lng,
+                        'address': attraction.address,
+                        'image': attraction.image.url if attraction.image else '',
+                        # 其他景点信息
+                    })
+                except Attraction.DoesNotExist:
+                    # 记录错误，但继续处理其他推荐项
+                    logger.error(f"推荐项ID {recommendation.id} 引用了不存在的景点ID {recommendation.attraction_id}")
+                    continue
+                except Exception as e:
+                    # 记录其他可能的错误
+                    logger.error(f"处理推荐项ID {recommendation.id} 时发生错误: {str(e)}")
+                    continue
+            
+            # 检查是否有有效的推荐数据
+            if not data:
+                # 如果没有有效数据，尝试使用备用策略
+                fallback_strategy = 5  # 使用策略5作为备用
+                if strategy != fallback_strategy:
+                    logger.warning(f"策略 {strategy} 没有有效的推荐数据，使用备用策略 {fallback_strategy}")
+                    return get_recommendations(request, fallback_strategy)
+                else:
+                    # 如果备用策略也没有数据，则返回空列表
+                    logger.warning("备用策略也没有有效的推荐数据")
+            
+            return JsonResponse({'recommendations': data})
+            
+        except Exception as e:
+            # 记录异常并返回错误响应
+            logger.error(f"获取推荐数据时发生错误: {str(e)}")
+            return JsonResponse({'error': '获取推荐数据失败', 'detail': str(e)}, status=500)
 
 
 def route_list(request):

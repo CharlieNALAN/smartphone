@@ -38,15 +38,15 @@ export default {
         },
         setTagName(scenic) {
             if (scenic == '1') {
-                return '西湖';
+                return '维多利亚港';
             } else if (scenic == '2') {
-                return '西溪湿地';
+                return '太平山顶';
             } else if (scenic == '3') {
-                return '千岛湖';
+                return '香港迪士尼乐园';
             } else if (scenic == '4') {
-                return '良渚古城';
+                return '海洋公园';
             }
-            return '大明山';
+            return '南丫岛';
         },
     },
 };
