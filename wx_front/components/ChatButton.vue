@@ -1,7 +1,7 @@
 <template>
   <view class="chat-button-container" :style="{ bottom: positionBottom + 'rpx' }">
     <view class="chat-button" @tap="openChat">
-      <image class="chat-icon" src="/static/images/chat-icon.png" mode="aspectFit"></image>
+      <image class="chat-icon" src="/static/chat-icon.png" mode="aspectFit"></image>
     </view>
   </view>
 </template>
@@ -34,13 +34,13 @@ export default {
   .chat-button {
     width: 100rpx;
     height: 100rpx;
-    background-color: #3C88FD;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.2);
-    
+		background: linear-gradient(to right, #5ac7d1, #60e1c1);
+		box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+
     .chat-icon {
       width: 60rpx;
       height: 60rpx;

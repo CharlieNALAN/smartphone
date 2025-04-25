@@ -6,7 +6,7 @@
 				<swiper-item>
 					<image class="swiper-item" :src="backimg_src" mode="scaleToFill" />
 					<view class="login_button">
-						<button @click="goToLogin">进入小程序</button>
+						<button @click="goToLogin">Enter</button>
 					</view>
 				</swiper-item>
 				<swiper-item>
@@ -48,7 +48,7 @@
 			},
 			handleLoginSuccess() {
 				uni.showToast({
-					title: '登录成功',
+					title: 'Login successfully',
 					icon: 'success'
 				});
 				this.currentIndex = 2;
@@ -85,13 +85,13 @@
 					});
 					// 注册或登录成功后的操作
 					uni.showToast({
-						title: '登录成功',
+						title: 'Login successfully',
 						icon: 'success'
 					});
 				} catch (error) {
 					console.error('微信登录失败:', error);
 					uni.showToast({
-						title: '登录失败',
+						title: 'Login failed',
 						icon: 'none'
 					});
 				}

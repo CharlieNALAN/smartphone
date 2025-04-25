@@ -145,14 +145,14 @@ def login(request):
                     logger.warning(f"登录失败-密码错误: phone={phone}")
                     return JsonResponse({
                         'status': 'fail', 
-                        'message': '密码错误'
+                        'message': 'Wrong Password'
                     }, status=401)
             except User.DoesNotExist:
                 # 用户不存在
                 logger.warning(f"登录失败-用户不存在: phone={phone}")
                 return JsonResponse({
                     'status': 'fail', 
-                    'message': '手机号错误'
+                    'message': 'Wrong Phone Number'
                 }, status=401)
                 
         except json.JSONDecodeError:

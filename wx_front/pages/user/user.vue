@@ -2,7 +2,7 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>我的</view>
+				<view>My</view>
 			</template>
 		</NavBar>
 		<view class="container_head">
@@ -13,18 +13,18 @@
 				<view class="inf_content">
 					<view class="user-row">
 						<view class="user-info-container">
-							<text class="user_info">{{ userInfo.username || '游客' }}</text>
+							<text class="user_info">{{ userInfo.username || 'Guest' }}</text>
 							<view v-if="isLoggedIn" class="user-badge">
 								<uni-icons type="checkmarkempty" size="12" color="#fff"></uni-icons>
-								<text>已认证</text>
+								<text>Verified</text>
 							</view>
 							<view v-else class="guest-badge">
 								<uni-icons type="info" size="12" color="#fff"></uni-icons>
-								<text>未登录</text>
+								<text>Not Logged In</text>
 							</view>
 						</view>
 						<button v-if="!isLoggedIn" class="login-btn" size="mini" @click="showLoginPopup">
-							<text>登录</text>
+							<text>Login</text>
 							<uni-icons type="arrowright" size="14" color="#333"></uni-icons>
 						</button>
 					</view>
@@ -40,7 +40,7 @@
 					<view v-else class="guest-info">
 						<view class="guest-tip">
 							<uni-icons type="info" size="14" color="rgba(255,255,255,0.8)"></uni-icons>
-							<text>登录后可查看更多功能</text>
+							<text>Log in to view more...</text>
 						</view>
 					</view>
 				</view>
@@ -59,7 +59,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="person-filled" size="28"></uni-icons>
-							<text>个人资料</text>
+							<text>Profile</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -67,7 +67,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="compose" size="28"></uni-icons>
-							<text>导游申请</text>
+							<text>Guide Application</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -75,7 +75,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="more" size="28"></uni-icons>
-							<text>关于软件</text>
+							<text>About</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -83,7 +83,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="help" size="28"></uni-icons>
-							<text>获取帮助</text>
+							<text>Help</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -91,7 +91,7 @@
 					<template v-slot:body>
 						<view class="list_item_contain">
 							<uni-icons type="closeempty" size="28" color="#dd524d"></uni-icons>
-							<text class="logout-text">退出登录</text>
+							<text class="logout-text">Logout</text>
 						</view>
 					</template>
 				</uni-list-item>
@@ -99,29 +99,29 @@
 		</view>
 		<view>
 			<uni-popup ref="inputDialog" type="dialog">
-				<uni-popup-dialog ref="inputClose" mode="input" title="输入邀请码" placeholder="请输入内容"
+				<uni-popup-dialog ref="inputClose" mode="input" title="Enter Invitation Code" placeholder="Please enter code"
 					@confirm="dialogInputConfirm">
 				</uni-popup-dialog>
 			</uni-popup>
 		</view>
 		<view class="last_view"></view>
 		
-		<!-- 登录弹窗 -->
+		<!-- Login popup -->
 		<uni-popup ref="loginPopup" type="center">
 			<view class="login-popup">
-				<view class="login-title">账号登录</view>
+				<view class="login-title">Account Login</view>
 				<view class="login-form">
 					<view class="input-item">
-						<text class="input-label">手机号</text>
-						<input type="number" v-model="loginForm.phone" placeholder="请输入手机号" maxlength="11" />
+						<text class="input-label">Phone</text>
+						<input type="number" v-model="loginForm.phone" placeholder="Enter phone number" maxlength="11" />
 					</view>
 					<view class="input-item">
-						<text class="input-label">密码</text>
-						<input type="password" v-model="loginForm.password" placeholder="请输入密码" />
+						<text class="input-label">Password</text>
+						<input type="password" v-model="loginForm.password" placeholder="Enter password" />
 					</view>
 					<view class="login-btns">
-						<button class="submit-btn" :loading="isLogging" @click="handleLogin">登录</button>
-						<button class="cancel-btn" @click="closeLoginPopup">取消</button>
+						<button class="submit-btn" :loading="isLogging" @click="handleLogin">Login</button>
+						<button class="cancel-btn" @click="closeLoginPopup">Cancel</button>
 					</view>
 				</view>
 			</view>
@@ -151,38 +151,38 @@
 				menuList: [{
 					id: 1,
 					url: '/pages/bought/bought',
-					text: '我的门票',
+					text: 'Tickets',
 					src: 'menpiao.png',
 					opentype: 'navigate',
 				}, {
 					id: 2,
 					url: '/pages/booked/booked',
-					text: '我的预约',
+					text: 'Bookings',
 					src: 'yuyue.png',
 					opentype: 'navigate',
 				}, {
 					id: 3,
 					url: '/pages/map/map',
-					text: '订单记录',
+					text: 'Orders',
 					src: 'suoyou.png',
 					opentype: 'navigate',
 				}, {
 					id: 4,
 					url: '/pages/track/track',
-					text: '消息中心',
+					text: 'Messages',
 					src: 'xiaoxi.png',
 					opentype: 'navigate',
 				}]
 			}
 		},
 		onShow() {
-			// 每次显示页面时都获取最新的用户信息
+			// Get latest user info every time page is shown
 			this.getUserInfo();
 		},
 		methods: {
-			// 显示登录弹窗
+			// Show login popup
 			showLoginPopup() {
-				// 清空表单
+				// Clear form
 				this.loginForm = {
 					phone: '',
 					password: ''
@@ -190,17 +190,17 @@
 				this.$refs.loginPopup.open();
 			},
 			
-			// 关闭登录弹窗
+			// Close login popup
 			closeLoginPopup() {
 				this.$refs.loginPopup.close();
 			},
 			
-			// 处理登录
+			// Handle login
 			handleLogin() {
-				// 表单验证
+				// Form validation
 				if (!this.loginForm.phone || !this.loginForm.password) {
 					uni.showToast({
-						title: '请填写完整信息',
+						title: 'Please fill in all fields',
 						icon: 'none'
 					});
 					return;
@@ -208,7 +208,7 @@
 				
 				this.isLogging = true;
 				
-				// 发送登录请求
+				// Send login request
 				uni.request({
 					url: 'http://localhost:8000/api/user/login',
 					method: 'POST',
@@ -217,39 +217,39 @@
 						password: this.loginForm.password
 					},
 					success: res => {
-						console.log('登录响应:', res.data);
+						console.log('Login response:', res.data);
 						
 						if (res.data.status === 'success') {
-							// 登录成功，保存用户信息
+							// Login successful, save user info
 							if (res.data.user) {
-								// 将用户信息存储到全局数据和本地存储
+								// Store user info to global data and local storage
 								const app = getApp();
 								if (app.globalData) {
 									app.globalData.userInfo = res.data.user;
-									console.log('已将用户信息保存到全局变量:', app.globalData.userInfo);
+									console.log('User info saved to global variable:', app.globalData.userInfo);
 								} else {
-									console.error('globalData未定义');
+									console.error('globalData not defined');
 								}
 								
 								uni.setStorageSync('userInfo', JSON.stringify(res.data.user));
-								console.log('已将用户信息保存到本地存储');
+								console.log('User info saved to local storage');
 								
-								// 更新当前页面的用户信息
+								// Update current page user info
 								this.userInfo = res.data.user;
 								this.isLoggedIn = true;
 								
-								// 关闭登录弹窗
+								// Close login popup
 								this.closeLoginPopup();
 								
-								// 显示成功提示
+								// Show success message
 								uni.showToast({
-									title: '登录成功',
+									title: 'Login successful',
 									icon: 'success'
 								});
 							}
 						} else {
-							// 登录失败，显示错误信息
-							let errorMsg = '登录失败';
+							// Login failed, show error message
+							let errorMsg = 'Login failed';
 							if (res.data.message) {
 								errorMsg = res.data.message;
 							}
@@ -260,9 +260,9 @@
 						}
 					},
 					fail: err => {
-						console.error('登录请求失败', err);
+						console.error('Login request failed', err);
 						uni.showToast({
-							title: '网络连接失败',
+							title: 'Network connection failed',
 							icon: 'none'
 						});
 					},
@@ -271,80 +271,80 @@
 					}
 				});
 			},
-			// 获取用户信息
+			// Get user info
 			getUserInfo() {
-				// 尝试从全局变量获取用户信息
+				// Try to get user info from global variable
 				const app = getApp();
-				console.log('获取用户信息 - 当前全局变量:', app.globalData);
+				console.log('Getting user info - current global variable:', app.globalData);
 				
 				if (app.globalData && app.globalData.userInfo) {
 					this.userInfo = app.globalData.userInfo;
 					this.isLoggedIn = true;
-					console.log('从全局变量获取到用户信息:', this.userInfo);
+					console.log('Got user info from global variable:', this.userInfo);
 					return;
 				}
 				
-				// 如果全局变量中没有，尝试从本地存储获取
+				// If not in global variable, try to get from local storage
 				try {
 					const userInfoStr = uni.getStorageSync('userInfo');
-					console.log('本地存储中的用户信息:', userInfoStr || '无');
+					console.log('User info in local storage:', userInfoStr || 'none');
 					
 					if (userInfoStr) {
 						this.userInfo = JSON.parse(userInfoStr);
 						this.isLoggedIn = true;
-						console.log('从本地存储获取到用户信息:', this.userInfo);
+						console.log('Got user info from local storage:', this.userInfo);
 						
-						// 同时更新全局变量
+						// Also update global variable
 						if (app.globalData) {
 							app.globalData.userInfo = this.userInfo;
-							console.log('已更新全局变量中的用户信息');
+							console.log('Updated user info in global variable');
 						} else {
-							console.error('globalData未定义');
+							console.error('globalData not defined');
 						}
 					} else {
 						this.isLoggedIn = false;
 						this.userInfo = {
-							username: '游客',
-							phone: '未登录'
+							username: 'Guest',
+							phone: 'Not logged in'
 						};
-						console.log('未找到已登录的用户信息');
+						console.log('No logged in user info found');
 					}
 				} catch (e) {
-					console.error('获取用户信息失败', e);
+					console.error('Failed to get user info', e);
 					this.isLoggedIn = false;
 					this.userInfo = {
-						username: '游客',
-						phone: '未登录'
+						username: 'Guest',
+						phone: 'Not logged in'
 					};
 				}
 			},
-			// 退出登录
+			// Logout
 			logout() {
 				uni.showModal({
-					title: '提示',
-					content: '确定要退出登录吗？',
+					title: 'Confirm',
+					content: 'Are you sure you want to logout?',
 					success: (res) => {
 						if (res.confirm) {
-							// 清除用户信息
+							// Clear user info
 							uni.removeStorageSync('userInfo');
-							console.log('已清除本地存储的用户信息');
+							console.log('Cleared user info from local storage');
 							
 							const app = getApp();
 							if (app.globalData) {
 								app.globalData.userInfo = null;
-								console.log('已清除全局变量中的用户信息');
+								console.log('Cleared user info from global variable');
 							} else {
-								console.error('globalData未定义');
+								console.error('globalData not defined');
 							}
 							
 							this.isLoggedIn = false;
 							this.userInfo = {
-								username: '游客',
-								phone: '未登录'
+								username: 'Guest',
+								phone: 'Not logged in'
 							};
 							
 							uni.showToast({
-								title: '已退出登录',
+								title: 'Logged out',
 								icon: 'success'
 							});
 						}
@@ -359,7 +359,7 @@
 				console.log(val)
 				uni.showToast({
 					icon: 'success',
-					title: '导游申请提交!'
+					title: 'Guide application submitted!'
 				})
 			},
 		}
@@ -634,7 +634,7 @@
 		height: 1200rpx;
 	}
 	
-	/* 登录弹窗样式 */
+	/* Login popup styles */
 	.login-popup {
 		width: 650rpx;
 		background-color: #fff;

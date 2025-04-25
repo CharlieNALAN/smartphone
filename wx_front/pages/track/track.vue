@@ -2,7 +2,7 @@
 	<view class="track-page">
 		<NavBar>
 			<template slot="title">
-				<view>历史足迹</view>
+				<view>Footprints</view>
 			</template>
 		</NavBar>
 		
@@ -23,22 +23,22 @@
 		<view class="stats-card">
 			<view class="stats-header">
 				<uni-icons type="calendar" size="22" color="#3bcb98"></uni-icons>
-				<text class="stats-title">行程概览</text>
+				<text class="stats-title">Trip Overview</text>
 			</view>
 			<view class="stats-content">
 				<view class="stats-item">
 					<text class="stats-value">{{rec_num}}</text>
-					<text class="stats-label">次到访</text>
+					<text class="stats-label">Visits</text>
 				</view>
 				<view class="stats-divider"></view>
 				<view class="stats-item">
 					<text class="stats-value">{{formatDate(rec_date)}}</text>
-					<text class="stats-label">最近到访</text>
+					<text class="stats-label">Last Visit</text>
 				</view>
 				<view class="stats-divider"></view>
 				<view class="stats-item">
 					<text class="stats-value">{{rec_attraction}}</text>
-					<text class="stats-label">最新景点</text>
+					<text class="stats-label">Latest Spot</text>
 				</view>
 			</view>
 		</view>
@@ -62,7 +62,7 @@
 						<uni-icons type="clock-filled" size="18" color="#3bcb98"></uni-icons>
 					</view>
 					<view class="time-details">
-						<text class="time-label">第一次</text>
+						<text class="time-label">First Time</text>
 						<text class="time-value">{{getStartTime()}}</text>
 						<text class="time-date">{{getStartDate()}}</text>
 					</view>
@@ -73,7 +73,7 @@
 						<uni-icons type="clock-filled" size="18" color="#3bcb98"></uni-icons>
 					</view>
 					<view class="time-details">
-						<text class="time-label">最近一次</text>
+						<text class="time-label">Last Time</text>
 						<text class="time-value">{{getEndTime()}}</text>
 						<text class="time-date">{{getEndDate()}}</text>
 					</view>
@@ -99,7 +99,7 @@
 			<view class="attraction-details">
 				<view class="detail-item">
 					<uni-icons type="calendar-filled" size="16" color="#3bcb98"></uni-icons>
-					<text class="detail-text">游玩时间: {{ selectedMarker.check_in_time }}</text>
+					<text class="detail-text">Play Time: {{ selectedMarker.check_in_time }}</text>
 				</view>
 				<view class="detail-item">
 					<uni-icons type="location-filled" size="16" color="#3bcb98"></uni-icons>
@@ -112,11 +112,11 @@
 			</view>
 			<view class="action-buttons">
 				<view class="action-button details" @click="navto_detail(selectedAttraction.attraction_id)">
-					<text>查看详情</text>
+					<text>View Details</text>
 				</view>
 				<view class="action-button navigate" @click="navigateToNavigationPage(selectedAttraction)">
 					<uni-icons type="paperplane-filled" size="16" color="#ffffff"></uni-icons>
-					<text>导航前往</text>
+					<text>Navigate</text>
 				</view>
 			</view>
 		</view>
@@ -136,18 +136,18 @@
 			return {
 				scenics: [],
 				activeScenicId: getApp().globalData.global_scenic_id,
-				// 当前选中的景区  
+				// Current selected scenic  
 				selectedScenic: null,
-				// 标记点数据，可以基于选中的景区动态生成  
+				// Marker data for the map  
 				markers: [],
-				// 折线数据，如果需要的话也可以动态生成  
+				// Polyline data  
 				polyline: [],
-				showInfo: false, // 是否显示景点信息卡片
-				selectedAttraction: {}, // 当前选中的景点信息
+				showInfo: false, 
+				selectedAttraction: {}, 
 				selectedMarker: {},
 				rec_num: 0,
 				rec_date: null,
-				rec_attraction: "",
+				rec_attraction: "No Records",
 				pattern: {
 					color: '#7A7E83',
 					backgroundColor: '#fff',
@@ -207,53 +207,53 @@
 		methods: {
 			// 检查登录状态
 			checkLoginStatus() {
-				// 先清除之前的数据
+				// First clear previous data
 				this.clearFootprintData();
 				
-				// 尝试从全局变量获取用户信息
+				// Try to get user info from global variable
 				const app = getApp();
-				console.log('全局对象结构:', JSON.stringify(app.globalData));
+				console.log('Global object structure:', JSON.stringify(app.globalData));
 				
 				if (app.globalData && app.globalData.userInfo) {
 					this.userInfo = app.globalData.userInfo;
 					this.isLoggedIn = true;
-					console.log('从全局变量获取到用户信息:', JSON.stringify(this.userInfo));
+					console.log('Got user info from global variable:', JSON.stringify(this.userInfo));
 					return;
 				}
 				
-				// 如果全局变量中没有，尝试从本地存储获取
+				// If not in global variable, try to get from local storage
 				try {
 					const userInfoStr = uni.getStorageSync('userInfo');
-					console.log('本地存储用户信息:', userInfoStr || '无');
+					console.log('Local storage user info:', userInfoStr || 'none');
 					
 					if (userInfoStr) {
 						this.userInfo = JSON.parse(userInfoStr);
 						this.isLoggedIn = true;
-						console.log('从本地存储获取到用户信息:', JSON.stringify(this.userInfo));
+						console.log('Got user info from local storage:', JSON.stringify(this.userInfo));
 						
-						// 同时更新全局变量
+						// Also update global variable
 						if (app.globalData) {
 							app.globalData.userInfo = this.userInfo;
-							console.log('已更新全局变量中的用户信息');
+							console.log('Updated user info in global variable');
 						} else {
-							console.error('globalData未定义，无法更新全局用户信息');
+							console.error('globalData not defined, cannot update global user info');
 						}
 					} else {
 						this.isLoggedIn = false;
 						this.userInfo = null;
-						this.showToastMessage('请先登录以查看您的足迹');
-						console.log('未找到已登录的用户信息');
+						this.showToastMessage('Please login to view your footprints');
+						console.log('No logged in user info found');
 						this.clearFootprintData();
 					}
 				} catch (e) {
-					console.error('获取用户信息失败', e);
+					console.error('Failed to get user info', e);
 					this.isLoggedIn = false;
 					this.userInfo = null;
-					this.showToastMessage('获取用户信息失败');
+					this.showToastMessage('Failed to get user info');
 					this.clearFootprintData();
 				}
 			},
-			// 显示提示信息
+			// Show toast message
 			showToastMessage(message) {
 				uni.showToast({
 					title: message,
@@ -267,7 +267,7 @@
 				this.polyline = [];
 				this.rec_num = 0;
 				this.rec_date = null;
-				this.rec_attraction = "暂无记录";
+				this.rec_attraction = "No Records";
 				this.showInfo = false;
 				this.selectedAttraction = {};
 				this.selectedMarker = {};
@@ -305,26 +305,26 @@
 				this.updateMarkersAndPolylines();
 			},
 			updateMarkersAndPolylines() {
-				// 清空已有数据
+				// Clear existing data
 				this.clearFootprintData();
 				
-				// 如果未登录，显示提示信息并返回
+				// If not logged in, show prompt and return
 				if (!this.isLoggedIn || !this.userInfo) {
-					this.showToastMessage('请先登录以查看您的足迹');
-					console.log('用户未登录，无法获取足迹');
+					this.showToastMessage('Please login to view your footprints');
+					console.log('User not logged in, cannot get footprints');
 					return;
 				}
 				
-				// 如果景区信息不存在，显示提示并返回
+				// If scenic info doesn't exist, show prompt and return
 				if (!this.selectedScenic || !this.selectedScenic.scenic_id) {
-					console.error('景区信息不存在');
-					this.showToastMessage('无法获取景区信息');
+					console.error('Scenic info does not exist');
+					this.showToastMessage('Unable to get scenic information');
 					return;
 				}
 				
 				const scenic = this.selectedScenic.scenic_id;
 				
-				// 优先查找可能的用户ID字段
+				// Find possible user ID field
 				let userId = null;
 				if (this.userInfo.id) {
 					userId = this.userInfo.id;
@@ -336,33 +336,33 @@
 					userId = this.userInfo.userid;
 				}
 				
-				console.log('用户信息:', JSON.stringify(this.userInfo));
-				console.log('获取到的用户ID:', userId);
+				console.log('User info:', JSON.stringify(this.userInfo));
+				console.log('User ID found:', userId);
 				
-				// 如果无法获取用户ID，显示提示并尝试使用全局用户信息的id
+				// If unable to get user ID, show prompt and try to use ID from global user info
 				if (!userId && app.globalData && app.globalData.userInfo) {
 					userId = app.globalData.userInfo.id;
-					console.log('尝试从全局变量直接获取ID:', userId);
+					console.log('Trying to get ID directly from global variable:', userId);
 				}
 				
-				// 如果还是无法获取ID，则显示错误信息
+				// If still unable to get ID, show error message
 				if (!userId) {
-					console.error('无法获取用户ID，请确保用户已正确登录');
-					this.showToastMessage('无法获取用户信息，请重新登录');
+					console.error('Unable to get user ID, please ensure user is properly logged in');
+					this.showToastMessage('Unable to get user info, please login again');
 					return;
 				}
 				
-				// 显示加载提示
+				// Show loading indicator
 				uni.showLoading({
-					title: '加载足迹中...'
+					title: 'Loading footprints...'
 				});
 				
-				// 使用新的API接口获取指定用户和景区的足迹
+				// Use new API endpoint to get footprints for specific user and scenic
 				uni.request({
 					url: `http://localhost:8000/api/footprint/user/${userId}/scenic/${scenic}/`,
 					method: 'GET',
 					success: (res) => {
-						// 隐藏加载提示
+						// Hide loading indicator
 						uni.hideLoading();
 						this.handleFootprintResponse(res);
 					},
@@ -377,7 +377,7 @@
 			updateRecDateAndAttraction(sortedFootprints) {
 				if (sortedFootprints.length === 0) {
 					this.rec_date = null;
-					this.rec_attraction = "暂无记录";
+					this.rec_attraction = "No Records";
 					return;
 				}
 				
@@ -387,7 +387,7 @@
 				this.rec_attraction = latestFootprint.attraction__attraction_name;
 			},
 			formatDate(date) {
-				if (!date) return '暂无记录';
+				if (!date) return 'No Records';
 				return new Date(date).toLocaleDateString();
 			},
 			getStartTime() {
@@ -447,283 +447,24 @@
 				// 这里可以根据实际情况实现导航逻辑
 			},
 			
-			// 分享路线功能
+			// Share route functionality
 			shareRoute() {
 				uni.showLoading({
-					title: '生成分享图片中...'
+					title: 'Generating share image...'
 				});
 				setTimeout(() => {
 					this.createShareImage();
 				}, 300);
 			},
 			
-			// 创建分享图片
-			createShareImage() {
-				const ctx = uni.createCanvasContext('shareCanvas', this);
-				const width = this.canvasWidth;
-				const height = this.canvasHeight;
-				
-				// 绘制背景
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, width, height);
-				
-				// 绘制标题
-				ctx.fillStyle = '#333333';
-				ctx.font = 'normal bold 24px sans-serif';
-				ctx.textAlign = 'center';
-				ctx.fillText(`${this.selectedScenic.scenic_name}游览路线`, width / 2, 50);
-				
-				// 绘制日期
-				ctx.fillStyle = '#666666';
-				ctx.font = 'normal 16px sans-serif';
-				ctx.fillText(`行程日期: ${this.getStartDate()} - ${this.getEndDate()}`, width / 2, 80);
-				
-				// 创建地图静态图片URL（使用腾讯地图静态图API）
-				const center = `${this.selectedScenic.scenic_lat},${this.selectedScenic.scenic_lng}`;
-				const zoom = this.selectedScenic.scale;
-				const size = '500x500';
-				const markers = this.markers.map(m => `markers=color:red|size:mid|${m.latitude},${m.longitude}`).join('&');
-				const path = `path=color:0x3bcb98|weight:4|${this.polyline[0].points.map(p => `${p.latitude},${p.longitude}`).join('|')}`;
-				
-				console.log("center: " + center);
-				console.log("zoom: " + zoom);
-				console.log("size: " + size);
-				console.log("markers: " + markers);
-				console.log("path: " + path);
-
-				// 这里使用腾讯地图静态图API（需要替换为真实的key）
-				// 注意：实际使用时需要申请腾讯地图API Key
-				const apiKey = 'LQ2BZ-J6V6A-GGPKJ-COKYU-FNMM3-MVFPN';
-				const mapImageUrl = `https://apis.map.qq.com/ws/staticmap/v2/?center=${center}&zoom=${zoom}&size=${size}&${markers}&${path}&key=${apiKey}`;
-				
-				console.log("mapImageUrl: " + mapImageUrl);
-
-				// 获取地图图片
-				uni.showLoading({
-					title: '获取地图中...'
-				});
-				
-				uni.getImageInfo({
-					src: mapImageUrl,
-					success: (res) => {
-						// 绘制地图
-						ctx.drawImage(res.path, 50, 100, 500, 500);
-						
-						// 绘制行程统计
-						this.drawStatsBox(ctx, 50, 620, 500, 120);
-						
-						// 绘制底部版权信息
-						ctx.fillStyle = '#999999';
-						ctx.font = 'normal 14px sans-serif';
-						ctx.textAlign = 'center';
-						ctx.fillText('我的旅行足迹 - 分享自景区导览App', width / 2, height - 30);
-						
-						// 绘制到画布
-						ctx.draw(false, () => {
-							setTimeout(() => {
-								this.saveCanvasToImage();
-							}, 300);
-						});
-					},
-					fail: (err) => {
-						console.error('获取地图图片失败', err);
-						uni.hideLoading();
-						
-						// 获取失败时尝试使用备用地图
-						uni.showToast({
-							title: '使用备用地图',
-							icon: 'none',
-							duration: 1500
-						});
-						
-						// 使用备用地图图片
-						const backupMapPath = '/static/map_placeholder.png';
-						uni.getImageInfo({
-							src: backupMapPath,
-							success: (res) => {
-								// 绘制备用地图
-								ctx.drawImage(res.path, 50, 100, 500, 500);
-								
-								// 绘制行程统计
-								this.drawStatsBox(ctx, 50, 620, 500, 120);
-								
-								// 绘制底部版权信息
-								ctx.fillStyle = '#999999';
-								ctx.font = 'normal 14px sans-serif';
-								ctx.textAlign = 'center';
-								ctx.fillText('我的旅行足迹 - 分享自景区导览App', width / 2, height - 30);
-								
-								// 绘制到画布
-								ctx.draw(false, () => {
-									setTimeout(() => {
-										this.saveCanvasToImage();
-									}, 300);
-								});
-							},
-							fail: (err2) => {
-								console.error('获取备用地图图片失败', err2);
-								uni.hideLoading();
-								uni.showToast({
-									title: '生成分享图片失败',
-									icon: 'none'
-								});
-							}
-						});
-					}
-				});
-			},
-			
-			// 绘制统计信息框
-			drawStatsBox(ctx, x, y, width, height) {
-				// 绘制统计信息背景
-				ctx.fillStyle = '#f9f9f9';
-				ctx.strokeStyle = '#eeeeee';
-				this.roundRect(ctx, x, y, width, height, 10);
-				ctx.fill();
-				ctx.stroke();
-				
-				// 绘制标题
-				ctx.fillStyle = '#333333';
-				ctx.font = 'normal bold 18px sans-serif';
-				ctx.textAlign = 'left';
-				ctx.fillText('行程概览', x + 20, y + 30);
-				
-				// 绘制统计数据
-				const itemWidth = width / 3;
-				
-				// 到访次数
-				ctx.fillStyle = '#333333';
-				ctx.font = 'normal bold 22px sans-serif';
-				ctx.textAlign = 'center';
-				ctx.fillText(this.rec_num, x + itemWidth / 2, y + 70);
-				
-				ctx.fillStyle = '#999999';
-				ctx.font = 'normal 14px sans-serif';
-				ctx.fillText('次到访', x + itemWidth / 2, y + 95);
-				
-				// 分隔线1
-				ctx.beginPath();
-				ctx.moveTo(x + itemWidth, y + 50);
-				ctx.lineTo(x + itemWidth, y + height - 30);
-				ctx.strokeStyle = '#eeeeee';
-				ctx.stroke();
-				
-				// 最近到访
-				ctx.fillStyle = '#333333';
-				ctx.font = 'normal bold 18px sans-serif';
-				ctx.textAlign = 'center';
-				ctx.fillText(this.formatDate(this.rec_date), x + itemWidth * 1.5, y + 70);
-				
-				ctx.fillStyle = '#999999';
-				ctx.font = 'normal 14px sans-serif';
-				ctx.fillText('最近到访', x + itemWidth * 1.5, y + 95);
-				
-				// 分隔线2
-				ctx.beginPath();
-				ctx.moveTo(x + itemWidth * 2, y + 50);
-				ctx.lineTo(x + itemWidth * 2, y + height - 30);
-				ctx.strokeStyle = '#eeeeee';
-				ctx.stroke();
-				
-				// 最新景点
-				ctx.fillStyle = '#333333';
-				ctx.font = 'normal bold 16px sans-serif';
-				ctx.textAlign = 'center';
-				// 如果文字太长，截取显示
-				const attractionName = this.rec_attraction.length > 8 ? 
-					this.rec_attraction.substring(0, 7) + '...' : this.rec_attraction;
-				ctx.fillText(attractionName, x + itemWidth * 2.5, y + 70);
-				
-				ctx.fillStyle = '#999999';
-				ctx.font = 'normal 14px sans-serif';
-				ctx.fillText('最新景点', x + itemWidth * 2.5, y + 95);
-			},
-			
-			// 绘制圆角矩形
-			roundRect(ctx, x, y, width, height, radius) {
-				ctx.beginPath();
-				ctx.moveTo(x + radius, y);
-				ctx.lineTo(x + width - radius, y);
-				ctx.arcTo(x + width, y, x + width, y + radius, radius);
-				ctx.lineTo(x + width, y + height - radius);
-				ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-				ctx.lineTo(x + radius, y + height);
-				ctx.arcTo(x, y + height, x, y + height - radius, radius);
-				ctx.lineTo(x, y + radius);
-				ctx.arcTo(x, y, x + radius, y, radius);
-				ctx.closePath();
-			},
-			
-			// 保存画布为图片并分享
-			saveCanvasToImage() {
-				uni.canvasToTempFilePath({
-					canvasId: 'shareCanvas',
-					success: (res) => {
-						uni.hideLoading();
-						// 保存图片到相册
-						uni.saveImageToPhotosAlbum({
-							filePath: res.tempFilePath,
-							success: () => {
-								this.openShareMenu(res.tempFilePath);
-							},
-							fail: (err) => {
-								console.error('保存图片失败', err);
-								uni.showToast({
-									title: '保存图片失败',
-									icon: 'none'
-								});
-							}
-						});
-					},
-					fail: (err) => {
-						uni.hideLoading();
-						console.error('生成图片失败', err);
-						uni.showToast({
-							title: '生成图片失败',
-							icon: 'none'
-						});
-					}
-				}, this);
-			},
-			
-			// 打开分享菜单
-			openShareMenu(imagePath) {
-				// #ifdef MP-WEIXIN
-				uni.showShareImageMenu({
-					path: imagePath,
-					success: () => {
-						uni.showToast({
-							title: '分享成功',
-							icon: 'success'
-						});
-					},
-					fail: (err) => {
-						console.error('打开分享菜单失败', err);
-						uni.showToast({
-							title: '请长按图片分享',
-							icon: 'none'
-						});
-					}
-				});
-				// #endif
-				
-				// #ifndef MP-WEIXIN
-				uni.showModal({
-					title: '分享成功',
-					content: '图片已保存到相册，请到相册中查看并分享',
-					showCancel: false
-				});
-				// #endif
-			},
-			
-			// 处理足迹数据响应
+			// Handle footprint data response
 			handleFootprintResponse(res) {
 				if (res.statusCode === 200) {
 					const footprints = res.data;
-					console.log('获取到足迹数据:', footprints ? footprints.length : 0, '条');
+					console.log('Footprint data received:', footprints ? footprints.length : 0, 'records');
 					
 					if (footprints && footprints.length > 0) {
-						// 更新标记点数据
+						// Update marker data
 						this.markers = footprints.map(footprint => ({
 							id: footprint.id,
 							longitude: footprint.attraction__attraction_lng,
@@ -731,12 +472,12 @@
 							name: footprint.attraction__attraction_name,
 							attraction_id: footprint.attraction__attraction_id,
 							check_in_time: footprint.check_in_time.split('T')[0],
-							width: 25, // 设置标记宽度
-							height: 35, // 设置标记高度
-							iconPath: '/static/marker.png', // 自定义图标路径
+							width: 25, // Set marker width
+							height: 35, // Set marker height
+							iconPath: '/static/marker.png', // Custom icon path
 						}));
 						
-						// 绘制路线轨迹
+						// Draw route trajectory
 						const sortedFootprints = [...footprints].sort(
 							(a, b) => new Date(a.check_in_time) - new Date(b.check_in_time)
 						);
@@ -753,30 +494,289 @@
 							dottedLine: true
 						}];
 						
-						// 更新 rec_num, rec_date 和 rec_attraction
+						// Update rec_num, rec_date and rec_attraction
 						this.updateRecNum(footprints);
 						this.updateRecDateAndAttraction(sortedFootprints);
 						
-						// 清空无足迹提示
+						// Clear no footprint message
 						this.noFootprintMessage = '';
 					} else {
-						// 没有足迹数据
-						this.showToastMessage(`您在${this.selectedScenic.scenic_name}暂无历史足迹`);
+						// No footprint data
+						this.showToastMessage(`No footprint history in ${this.selectedScenic.scenic_name}`);
 					}
 				} else {
-					// 请求失败
-					console.error('获取足迹数据失败:', res);
-					this.showToastMessage('获取足迹数据失败');
+					// Request failed
+					console.error('Failed to get footprint data:', res);
+					this.showToastMessage('Failed to get footprint data');
 				}
 			},
 			
-			// 处理请求失败
+			// Handle request failure
 			handleRequestFail(err) {
-				// 隐藏加载提示
+				// Hide loading indicator
 				uni.hideLoading();
 				
-				console.error('请求足迹数据失败:', err);
-				this.showToastMessage('网络请求失败，请检查网络');
+				console.error('Footprint data request failed:', err);
+				this.showToastMessage('Network request failed, please check your connection');
+			},
+			
+			// Create share image
+			createShareImage() {
+				const ctx = uni.createCanvasContext('shareCanvas', this);
+				const width = this.canvasWidth;
+				const height = this.canvasHeight;
+				
+				// Draw background
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect(0, 0, width, height);
+				
+				// Draw title
+				ctx.fillStyle = '#333333';
+				ctx.font = 'normal bold 24px sans-serif';
+				ctx.textAlign = 'center';
+				ctx.fillText(`${this.selectedScenic.scenic_name} Tour Route`, width / 2, 50);
+				
+				// Draw date
+				ctx.fillStyle = '#666666';
+				ctx.font = 'normal 16px sans-serif';
+				ctx.fillText(`Tour Date: ${this.getStartDate()} - ${this.getEndDate()}`, width / 2, 80);
+				
+				// Create static map image URL (using Tencent Map API)
+				const center = `${this.selectedScenic.scenic_lat},${this.selectedScenic.scenic_lng}`;
+				const zoom = this.selectedScenic.scale;
+				const size = '500x500';
+				const markers = this.markers.map(m => `markers=color:red|size:mid|${m.latitude},${m.longitude}`).join('&');
+				const path = `path=color:0x3bcb98|weight:4|${this.polyline[0].points.map(p => `${p.latitude},${p.longitude}`).join('|')}`;
+				
+				console.log("center: " + center);
+				console.log("zoom: " + zoom);
+				console.log("size: " + size);
+				console.log("markers: " + markers);
+				console.log("path: " + path);
+
+				// Using Tencent Map static image API (need to replace with real key)
+				// Note: You need to apply for Tencent Map API Key in production
+				const apiKey = 'LQ2BZ-J6V6A-GGPKJ-COKYU-FNMM3-MVFPN';
+				const mapImageUrl = `https://apis.map.qq.com/ws/staticmap/v2/?center=${center}&zoom=${zoom}&size=${size}&${markers}&${path}&key=${apiKey}`;
+				
+				console.log("mapImageUrl: " + mapImageUrl);
+
+				// Get map image
+				uni.showLoading({
+					title: 'Getting map...'
+				});
+				
+				uni.getImageInfo({
+					src: mapImageUrl,
+					success: (res) => {
+						// Draw map
+						ctx.drawImage(res.path, 50, 100, 500, 500);
+						
+						// Draw trip statistics
+						this.drawStatsBox(ctx, 50, 620, 500, 120);
+						
+						// Draw copyright info
+						ctx.fillStyle = '#999999';
+						ctx.font = 'normal 14px sans-serif';
+						ctx.textAlign = 'center';
+						ctx.fillText('My Travel Footprints - Shared from Scenic Guide App', width / 2, height - 30);
+						
+						// Draw to canvas
+						ctx.draw(false, () => {
+							setTimeout(() => {
+								this.saveCanvasToImage();
+							}, 300);
+						});
+					},
+					fail: (err) => {
+						console.error('Failed to get map image', err);
+						uni.hideLoading();
+						
+						// Try using backup map if failed
+						uni.showToast({
+							title: 'Using backup map',
+							icon: 'none',
+							duration: 1500
+						});
+						
+						// Use backup map image
+						const backupMapPath = '/static/map_placeholder.png';
+						uni.getImageInfo({
+							src: backupMapPath,
+							success: (res) => {
+								// Draw backup map
+								ctx.drawImage(res.path, 50, 100, 500, 500);
+								
+								// Draw trip statistics
+								this.drawStatsBox(ctx, 50, 620, 500, 120);
+								
+								// Draw copyright info
+								ctx.fillStyle = '#999999';
+								ctx.font = 'normal 14px sans-serif';
+								ctx.textAlign = 'center';
+								ctx.fillText('My Travel Footprints - Shared from Scenic Guide App', width / 2, height - 30);
+								
+								// Draw to canvas
+								ctx.draw(false, () => {
+									setTimeout(() => {
+										this.saveCanvasToImage();
+									}, 300);
+								});
+							},
+							fail: (err2) => {
+								console.error('Failed to get backup map image', err2);
+								uni.hideLoading();
+								uni.showToast({
+									title: 'Failed to generate share image',
+									icon: 'none'
+								});
+							}
+						});
+					}
+				});
+			},
+			
+			// Draw stats box
+			drawStatsBox(ctx, x, y, width, height) {
+				// Draw stats background
+				ctx.fillStyle = '#f9f9f9';
+				ctx.strokeStyle = '#eeeeee';
+				this.roundRect(ctx, x, y, width, height, 10);
+				ctx.fill();
+				ctx.stroke();
+				
+				// Draw title
+				ctx.fillStyle = '#333333';
+				ctx.font = 'normal bold 18px sans-serif';
+				ctx.textAlign = 'left';
+				ctx.fillText('Trip Overview', x + 20, y + 30);
+				
+				// Draw stats data
+				const itemWidth = width / 3;
+				
+				// Visit count
+				ctx.fillStyle = '#333333';
+				ctx.font = 'normal bold 22px sans-serif';
+				ctx.textAlign = 'center';
+				ctx.fillText(this.rec_num, x + itemWidth / 2, y + 70);
+				
+				ctx.fillStyle = '#999999';
+				ctx.font = 'normal 14px sans-serif';
+				ctx.fillText('Visits', x + itemWidth / 2, y + 95);
+				
+				// Divider 1
+				ctx.beginPath();
+				ctx.moveTo(x + itemWidth, y + 50);
+				ctx.lineTo(x + itemWidth, y + height - 30);
+				ctx.strokeStyle = '#eeeeee';
+				ctx.stroke();
+				
+				// Last visit
+				ctx.fillStyle = '#333333';
+				ctx.font = 'normal bold 18px sans-serif';
+				ctx.textAlign = 'center';
+				ctx.fillText(this.formatDate(this.rec_date), x + itemWidth * 1.5, y + 70);
+				
+				ctx.fillStyle = '#999999';
+				ctx.font = 'normal 14px sans-serif';
+				ctx.fillText('Last Visit', x + itemWidth * 1.5, y + 95);
+				
+				// Divider 2
+				ctx.beginPath();
+				ctx.moveTo(x + itemWidth * 2, y + 50);
+				ctx.lineTo(x + itemWidth * 2, y + height - 30);
+				ctx.strokeStyle = '#eeeeee';
+				ctx.stroke();
+				
+				// Latest attraction
+				ctx.fillStyle = '#333333';
+				ctx.font = 'normal bold 16px sans-serif';
+				ctx.textAlign = 'center';
+				// Truncate text if too long
+				const attractionName = this.rec_attraction.length > 8 ? 
+					this.rec_attraction.substring(0, 7) + '...' : this.rec_attraction;
+				ctx.fillText(attractionName, x + itemWidth * 2.5, y + 70);
+				
+				ctx.fillStyle = '#999999';
+				ctx.font = 'normal 14px sans-serif';
+				ctx.fillText('Latest Spot', x + itemWidth * 2.5, y + 95);
+			},
+			
+			// Draw rounded rectangle
+			roundRect(ctx, x, y, width, height, radius) {
+				ctx.beginPath();
+				ctx.moveTo(x + radius, y);
+				ctx.lineTo(x + width - radius, y);
+				ctx.arcTo(x + width, y, x + width, y + radius, radius);
+				ctx.lineTo(x + width, y + height - radius);
+				ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+				ctx.lineTo(x + radius, y + height);
+				ctx.arcTo(x, y + height, x, y + height - radius, radius);
+				ctx.lineTo(x, y + radius);
+				ctx.arcTo(x, y, x + radius, y, radius);
+				ctx.closePath();
+			},
+			
+			// Save canvas as image and share
+			saveCanvasToImage() {
+				uni.canvasToTempFilePath({
+					canvasId: 'shareCanvas',
+					success: (res) => {
+						uni.hideLoading();
+						// Save image to album
+						uni.saveImageToPhotosAlbum({
+							filePath: res.tempFilePath,
+							success: () => {
+								this.openShareMenu(res.tempFilePath);
+							},
+							fail: (err) => {
+								console.error('Failed to save image', err);
+								uni.showToast({
+									title: 'Failed to save image',
+									icon: 'none'
+								});
+							}
+						});
+					},
+					fail: (err) => {
+						uni.hideLoading();
+						console.error('Failed to generate image', err);
+						uni.showToast({
+							title: 'Failed to generate image',
+							icon: 'none'
+						});
+					}
+				}, this);
+			},
+			
+			// Open share menu
+			openShareMenu(imagePath) {
+				// #ifdef MP-WEIXIN
+				uni.showShareImageMenu({
+					path: imagePath,
+					success: () => {
+						uni.showToast({
+							title: 'Shared successfully',
+							icon: 'success'
+						});
+					},
+					fail: (err) => {
+						console.error('Failed to open share menu', err);
+						uni.showToast({
+							title: 'Please long press image to share',
+							icon: 'none'
+						});
+					}
+				});
+				// #endif
+				
+				// #ifndef MP-WEIXIN
+				uni.showModal({
+					title: 'Share Success',
+					content: 'Image has been saved to album, please check and share from there',
+					showCancel: false
+				});
+				// #endif
 			}
 		}
 	};

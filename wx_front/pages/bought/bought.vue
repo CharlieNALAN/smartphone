@@ -2,17 +2,17 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>我的门票</view>
+				<view>My Tickets</view>
 			</template>
 		</NavBar>
 		<view class="tabs-container">
 			<view class="tabs">
-				<view class="tab" :class="{ active: currentTab === 'all' }" @click="switchTab('all')">全部</view>
+				<view class="tab" :class="{ active: currentTab === 'all' }" @click="switchTab('all')">All</view>
 				<view class="tab" :class="{ active: currentTab === 'pending' }" @click="switchTab('pending')">
-					<text>待支付</text>
+					<text>Pending</text>
 					<uni-badge v-if="pendingCount > 0" :text="pendingCount" absolute="rightTop" :offset="[-5, -10]"></uni-badge>
 				</view>
-				<view class="tab" :class="{ active: currentTab === 'paid' }" @click="switchTab('paid')">已支付</view>
+				<view class="tab" :class="{ active: currentTab === 'paid' }" @click="switchTab('paid')">Paid</view>
 			</view>
 			<view class="tab-content">
 				<view v-if="currentTab === 'all'">
@@ -27,7 +27,7 @@
 										<view class="name-info junyun">
 											<view class="name-container">
 												<text
-													style="color: black;">{{ item.attraction.attraction_name }}门票</text>
+													style="color: black;">{{ item.attraction.attraction_name }}</text>
 											</view>
 											<view class="count-container">
 												<text style="color: black;">x{{ item.ticket_count }}</text>
@@ -35,16 +35,16 @@
 										</view>
 										<view class="other-info junyun">
 											<text
-												style="font-size: 14px; margin-left: 3px; color: grey;">使用日期：{{ item.ticket_date }}</text>
+												style="font-size: 14px; margin-left: 3px; color: grey;">Usage Date: {{ item.ticket_date }}</text>
 											<uni-tag class="status" :inverted="true" :circle="true"
-												:text="item.status_text" :type="item.status_text === '待支付' ? 'error' :   
-												item.status_text === '已支付' ? 'success' :   
-												item.status_text === '已完成' ? 'primary' :   
-												item.status_text === '已取消' ? 'default' :   
+												:text="item.status_text" :type="item.status_text === 'Pending' ? 'error' :   
+												item.status_text === 'Paid' ? 'success' :   
+												item.status_text === 'Used' ? 'primary' :   
+												item.status_text === 'Canceled' ? 'default' :   
 												'default'" size="mini" />
 										</view>
 										<view class="nav kaoyou">
-										    <uni-tag :text="item.status === 0 ? '前往支付' : '查看详情'" type="warning" style="margin-left: 15px;" @click="item.status === 0 ? navto_pay(item.ticket_id) : navto_detail(item.ticket_id)"></uni-tag>
+										    <uni-tag :text="item.status === 0 ? 'Go to Payment' : 'Details'" type="warning" style="margin-left: 15px;" @click="item.status === 0 ? navto_pay(item.ticket_id) : navto_detail(item.ticket_id)"></uni-tag>
 										</view>
 									</view>
 								</view>
@@ -52,7 +52,7 @@
 						</template>
 						<u-line color="lightgrey" />
 						<u-line margin="3px 0px" color="white" />
-						<text>购买好门票后请提前安排好行程，避免门票失效喔～</text>
+						<text>Please arrange your itinerary in advance after purchasing tickets to avoid ticket expiration.</text>
 					</uni-card>
 				</view>
 				<view v-if="currentTab === 'pending'">
@@ -67,7 +67,7 @@
 										<view class="name-info junyun">
 											<view class="name-container">
 												<text
-													style="color: black;">{{ item.attraction.attraction_name }}门票</text>
+													style="color: black;">{{ item.attraction.attraction_name }}</text>
 											</view>
 											<view class="count-container">
 												<text style="color: black;">x{{ item.ticket_count }}</text>
@@ -75,16 +75,16 @@
 										</view>
 										<view class="other-info junyun">
 											<text
-												style="font-size: 14px; margin-left: 3px; color: grey;">使用日期：{{ item.ticket_date }}</text>
+												style="font-size: 14px; margin-left: 3px; color: grey;">Usage Date: {{ item.ticket_date }}</text>
 											<uni-tag class="status" :inverted="true" :circle="true"
-												:text="item.status_text" :type="item.status_text === '待支付' ? 'error' :   
-												item.status_text === '已支付' ? 'success' :   
-												item.status_text === '已完成' ? 'primary' :   
-												item.status_text === '已取消' ? 'default' :   
+												:text="item.status_text" :type="item.status_text === 'Pending' ? 'error' :   
+												item.status_text === 'Paid' ? 'success' :   
+												item.status_text === 'Used' ? 'primary' :   
+												item.status_text === 'Canceled' ? 'default' :   
 												'default'" size="mini" />
 										</view>
 										<view class="nav kaoyou">
-											<uni-tag text="前往支付" type="warning" style="margin-left: 15px;"
+											<uni-tag text="Go to Payment" type="warning" style="margin-left: 15px;"
 												@click="navto_pay(item.ticket_id)"></uni-tag>
 										</view>
 									</view>
@@ -93,7 +93,7 @@
 						</template>
 						<u-line color="lightgrey" />
 						<u-line margin="3px 0px" color="white" />
-						<text>购买好门票后请提前安排好行程，避免门票失效喔～</text>
+						<text>Please arrange your itinerary in advance after purchasing tickets to avoid ticket expiration.</text>
 					</uni-card>
 				</view>
 				<view v-if="currentTab === 'paid'">
@@ -108,7 +108,7 @@
 										<view class="name-info junyun">
 											<view class="name-container">
 												<text
-													style="color: black;">{{ item.attraction.attraction_name }}门票</text>
+													style="color: black;">{{ item.attraction.attraction_name }}</text>
 											</view>
 											<view class="count-container">
 												<text style="color: black;">x{{ item.ticket_count }}</text>
@@ -116,16 +116,16 @@
 										</view>
 										<view class="other-info junyun">
 											<text
-												style="font-size: 14px; margin-left: 3px; color: grey;">使用日期：{{ item.ticket_date }}</text>
+												style="font-size: 14px; margin-left: 3px; color: grey;">Usage Date: {{ item.ticket_date }}</text>
 											<uni-tag class="status" :inverted="true" :circle="true"
-												:text="item.status_text" :type="item.status_text === '待支付' ? 'error' :   
-												item.status_text === '已支付' ? 'success' :   
-												item.status_text === '已完成' ? 'primary' :   
-												item.status_text === '已取消' ? 'default' :   
+												:text="item.status_text" :type="item.status_text === 'Pending' ? 'error' :   
+												item.status_text === 'Paid' ? 'success' :   
+												item.status_text === 'Used' ? 'primary' :   
+												item.status_text === 'Canceled' ? 'default' :   
 												'default'" size="mini" />
 										</view>
 										<view class="nav kaoyou">
-											<uni-tag text="查看详情" type="warning" style="margin-left: 15px;"
+											<uni-tag text="Details" type="warning" style="margin-left: 15px;"
 												@click="navto_detail(item.attraction_id)"></uni-tag>
 										</view>
 									</view>
@@ -134,7 +134,7 @@
 						</template>
 						<u-line color="lightgrey" />
 						<u-line margin="3px 0px" color="white" />
-						<text>购买好门票后请提前安排好行程，避免门票失效喔～</text>
+						<text>Please arrange your itinerary in advance after purchasing tickets to avoid ticket expiration.</text>
 					</uni-card>
 				</view>
 			</view>
@@ -160,10 +160,10 @@
 					'paid': 1 // 'paid' 标识对应已支付门票数据  
 				},
 				status_choices: { // 定义status的映射关系
-					0: "待支付",
-					1: "已支付",
-					2: "已完成",
-					3: "已取消"
+					0: "Pending",
+					1: "Paid",
+					2: "Used",
+					3: "Canceled"
 				},
 				pendingCount: 0,
 			};
@@ -198,7 +198,7 @@
 						} else {
 							this.tickets = [];
 							uni.showToast({
-								title: '暂无数据',
+								title: 'No data',
 								icon: 'none'
 							});
 						}
@@ -206,7 +206,7 @@
 					fail: (error) => { // 注意这里使用fail代替catch，因为uni.request使用的是fail来处理错误  
 						console.error(error);
 						uni.showToast({
-							title: '加载失败',
+							title: 'Fail loading...',
 							icon: 'none'
 						});
 					}

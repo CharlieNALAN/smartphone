@@ -18,7 +18,7 @@
 			</block>
 		</uni-nav-bar>
 		<view class="notice">
-			<uni-notice-bar show-icon scrollable text="香港公园郁金香花展已开启预约通道!注意开放时间为8:00-17:00,请各位游客安排好游览时间!">
+			<uni-notice-bar show-icon scrollable text="The Hong Kong Park Tulip Exhibition has opened the reservation channel! Note that the opening hours are 8:00-17:00, please arrange your visit time!">
 			</uni-notice-bar>
 		</view>
 		<view class="category">
@@ -29,10 +29,10 @@
 			</navigator>
 		</view>
 		<view class="container">
-			<uni-section class="futitle" title="热门景点" titleFontSize="30rpx">
+			<uni-section class="futitle" title="Popular Attractions" titleFontSize="30rpx">
 				<template v-slot:right>
 					<navigation class="title-more" url="/pages/recommend/recommend">
-						<text>查看全部</text>
+						<text>See all</text>
 						<uni-icons type="right" size="18"></uni-icons>
 					</navigation>
 				</template>
@@ -44,10 +44,10 @@
 			</scroll-view>
 		</view>
 		<view class="container container-color">
-			<uni-section class="futitle" title="精品路线" titleFontSize="30rpx">
+			<uni-section class="futitle" title="Popular Routes" titleFontSize="30rpx">
 				<template v-slot:right>
 					<navigation class="title-more" url="/pages/recommend/recommend">
-						<text>查看全部</text>
+						<text>See all</text>
 						<uni-icons type="right" size="18"></uni-icons>
 					</navigation>
 				</template>
@@ -75,7 +75,7 @@
 		data() {
 			return {
 				scenic_index: getApp().globalData.global_scenic_id - 1,
-				scenic_array: ['维多利亚港', '太平山顶', '迪士尼乐园', '海洋公园', '南丫岛'],
+				scenic_array: ['Victoria Harbour', 'Peak', 'Disneyland', 'Ocean Park', 'Lamma Island'],
 				swiperList: [
 					'/static/swiper/seven.png',
 					'/static/swiper/eight.png',
@@ -100,25 +100,25 @@
 				menuList: [{
 					id: 1,
 					url: '/pages/map/map',
-					text: '地图导览',
+					text: 'Map',
 					src: '/static/home_menu/map.png',
 					opentype: 'switchTab',
 				}, {
 					id: 2,
 					url: '/pages/attraction/attraction',
-					text: '景点介绍',
+					text: 'Attractions',
 					src: '/static/home_menu/info.png',
 					opentype: 'navigate',
 				}, {
 					id: 3,
 					url: '/pages/ticket/ticket',
-					text: '预约购票',
+					text: 'Ticket',
 					src: '/static/home_menu/ticket.png',
 					opentype: 'navigate',
 				}, {
 					id: 4,
 					url: '/pages/track/track',
-					text: '历史足迹',
+					text: 'Footprint',
 					src: '/static/home_menu/track.png',
 					opentype: 'switchTab',
 				}]
@@ -156,12 +156,19 @@
 	}
 
 	.scenic_pick {
-		width: 120px;
+		width: 150px;
 	}
 
 	picker {
-		width: 100px;
-		font-size: 18px;
+		width: 110px;
+		height: 40px;
+		font-size: 13px;
+		background-color: white;
+		border-radius: 20px;
+		padding-left: 10px;
+		/* 垂直居中 */
+		display: flex;
+		align-items: center;
 	}
 
 	swiper {
@@ -170,16 +177,19 @@
 	}
 
 	.scenic_text {
-		width: 100px;
+		width: 118px;
+		font-weight: bolder;
+		font-family: ui-monospace;
+		align-items: center;
 	}
 	
 	.slide-image {
 		width: 100%;
-		height: 500rpx;
+		height: 490rpx;
 	}
 
 	.notice {
-		margin-top: 200px;
+		margin-top: 180px;
 	}
 
 	.category {
@@ -237,6 +247,6 @@
 	}
 
 	.hot-image image {
-		height: 300rpx;
+		height: 390rpx;
 	}
 </style>

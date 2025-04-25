@@ -2,7 +2,7 @@
 	<view class="recommend-page">
 		<NavBar>
 			<template slot="title">
-				<view>为你推荐</view>
+				<view>Recommendations</view>
 			</template>
 		</NavBar>
 		
@@ -10,7 +10,7 @@
 		<view class="top-section">
 			<view class="search-bar">
 				<uni-icons type="search" size="20" color="#999"></uni-icons>
-				<input type="text" placeholder="搜索景点" />
+				<input type="text" placeholder="Search Attractions" />
 			</view>
 			<scroll-view scroll-x="true" class="category-scroll" show-scrollbar="false">
 				<!-- <view class="category-list">
@@ -32,8 +32,8 @@
 		
 		<!-- 景点推荐标题 -->
 		<view class="section-title">
-			<text class="title-text">景点推荐</text>
-			<text class="subtitle-text">发现精彩景点</text>
+			<text class="title-text">Attraction Recommendations</text>
+			<text class="subtitle-text">Discover Exciting Attractions</text>
 		</view>
 		
 		<!-- 推荐卡片区域 -->
@@ -41,8 +41,8 @@
 		
 		<!-- 路线推荐标题 -->
 		<view class="section-title">
-			<text class="title-text">路线推荐</text>
-			<text class="subtitle-text">精心规划的游览路线</text>
+			<text class="title-text">Route Recommendations</text>
+			<text class="subtitle-text">Well-planned routes</text>
 		</view>
 		
 		<!-- 路线推荐组件 -->
@@ -65,7 +65,7 @@
 				recommend_datas: [], // 存放推荐景点数据
 				strategy: 1,
 				global_scenic_id: getApp().globalData.global_scenic_id,
-				activeCategory: '全部',
+				activeCategory: 'All',
 				currentIndex: 0
 			}
 		},
@@ -113,7 +113,7 @@
 						fail: (err) => {
 							console.error('Navigation failed:', err);
 							uni.showToast({
-								title: '页面跳转失败',
+								title: 'Page navigation failed',
 								icon: 'none'
 							});
 						}
@@ -121,7 +121,7 @@
 				} else {
 					console.error('Invalid item or missing attraction_id:', item);
 					uni.showToast({
-						title: '景点信息不完整',
+						title: 'Incomplete attraction information',
 						icon: 'none'
 					});
 				}
@@ -179,7 +179,7 @@
 	}
 	
 	.category-scroll {
-		margin: 30rpx 0;
+		margin: 15rpx 0;
 	}
 	
 	.category-list {

@@ -2,7 +2,7 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>地图导览</view>
+				<view>Map Navigation</view>
 			</template>
 		</NavBar>
 		<view class="container map-container">
@@ -33,16 +33,16 @@
 					</template>
 					<view class="select_nav">
 						<view>
-							<uni-tag text="查看详情" circle="true" type="warning" style="margin-left: 15px;"
+							<uni-tag text="Details" circle="true" type="warning" style="margin-left: 15px;"
 								@click="navto_detail"></uni-tag>
-							<uni-tag v-if="!isChecked" text="标记为已打卡" circle="true" type="success"
+							<uni-tag v-if="!isChecked" text="Check In" circle="true" type="success"
 								style="margin-left: 15px;" @click="markChecked"></uni-tag>
-							<uni-tag v-if="isChecked" text="已打卡" circle="true" type="success"
+							<uni-tag v-if="isChecked" text="Checked" circle="true" type="success"
 								style="margin-left: 15px;"></uni-tag>
 						</view>
 						<view class="select_nav_box" @click="navigateToNavigationPage(selectedAttraction)">
 							<uni-icons type="paperplane-filled" size="16" color="#a9dbd0"></uni-icons>
-							<text>导航</text>
+							<text>Nav To</text>
 						</view>
 					</view>
 				</uni-card>
@@ -51,7 +51,7 @@
 		</view>
 		<uni-popup ref="popup" type="bottom" background-color="#fff" border-radius="10px 10px 0 0">
 			<view class="time-picker">
-				<text>请选择打卡此景点的时间</text>
+				<text>Please select the time to check in</text>
 				<u-line margin="10px 0" color="white" />
 				<uni-datetime-picker type="datetime" returnType="date" v-model="selectedDateTime"
 					@change="handleChange" />
@@ -75,9 +75,9 @@
 				resource_url: getApp().globalData.resourceURL,
 				scenic_info: [],
 				title: 'map',
-				latitude: 30.244917207446186,
-				longitude: 120.14621247265623,
-				scale: 13.8,
+				latitude: 22.280121,
+				longitude: 114.142718,
+				scale: 16,
 				attractions: [], // 存储从后端获取的景点数据
 				markers: [], // 地图标记点
 				showInfo: false, // 是否显示景点信息卡片
@@ -127,14 +127,14 @@
 							userId = userInfo.id || userInfo.user_id;
 						}
 					} catch (e) {
-						console.error('获取用户信息失败', e);
+						console.error('Failed to get user information', e);
 					}
 				}
 				
 				// 如果没有获取到用户ID，提示用户登录
 				if (!userId) {
 					uni.showToast({
-						title: '请先登录',
+						title: 'Please login first',
 						icon: 'none'
 					});
 					return;
@@ -152,13 +152,13 @@
 					},
 					success: (res) => {
 						// 成功添加足迹
-						console.log('足迹添加成功');
+						console.log('Footprint added successfully');
 						this.$refs.popup.close();
 						this.isChecked = true;
 					},
 					fail: (err) => {
 						// 处理错误
-						console.error('足迹添加失败:', err);
+						console.error('Failed to add footprint:', err);
 					}
 				});
 			},
@@ -217,14 +217,14 @@
 					callout: {
 						content: attraction.attraction_name,
 						color: '#000000',
-						fontSize: 12,
+						fontSize: 10,
 						borderRadius: 4,
 						padding: 5,
 						bgColor: '#ffffff',
 						display: 'ALWAYS'
 					},
-					iconPath: '/static/tabbar_icon/location.png', // 使用已有图标
-					width: 32, // 增大标记宽度
+					// iconPath: '/static/tabbar_icon/location.png', // 使用已有图标
+					width: 22, // 增大标记宽度
 					height: 32, // 增大标记高度
 					zIndex: index + 1, // 为每个标记点设置不同的层级，避免重叠问题
 					anchor: {
@@ -251,7 +251,7 @@
 						unit
 					} = this.calculateDistance(this.userLocation.latitude, this.userLocation.longitude,
 						selectedAttraction.attraction_lat, selectedAttraction.attraction_lng);
-					this.distanceToAttraction = `距您约 ${value.toFixed(2)} ${unit}`;
+					this.distanceToAttraction = `About ${value.toFixed(2)} ${unit} from you`;
 					console.log(this.distanceToAttraction);
 					// 设置选中的景点信息
 					this.selectedAttraction = selectedAttraction;

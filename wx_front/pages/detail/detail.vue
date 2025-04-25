@@ -26,7 +26,7 @@
 					</view>
 				</template>
 				<template v-slot:footer>
-					<view class="nav_view" @click="open_mapnav">
+					<view class="nav_view" @click="navigateToNavigationPage(attraction_data)">
 						<image class="slot_img" src="/static/tabbar_icon/location-active.png" mode="widthFix"></image>
 						<text>地图·导航</text>
 					</view>
@@ -78,6 +78,21 @@
 		methods: {
 			back() {
 				uni.navigateBack()
+			},
+			navigateToNavigationPage(selectedAttraction) {
+				// 实现地图导航的逻辑
+				uni.openLocation({
+					latitude: selectedAttraction.attraction_lat,
+					longitude: selectedAttraction.attraction_lng,
+					name: selectedAttraction.attraction_name,
+					address: selectedAttraction.address,
+					success: (res) => {
+						console.log(res)
+					},
+					fail: (res) => {
+						console.log(res)
+					}
+				})
 			},
 		},
 		onLoad(options) {

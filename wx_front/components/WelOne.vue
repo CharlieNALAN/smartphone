@@ -5,11 +5,11 @@
 				:style="'height:'+ show_screen_height + 'px;' +'width: 100%;z-index: -1;'" mode="scaleToFill"></image>
 			<view class="choose_scenic">
 				<view class="txt1">
-					<text>请选择您所要游览的景区</text>
+					<text>Please select the scenic!</text>
 				</view>
 				<uni-data-checkbox class="scenic_pick" mode="tag" v-model="selectedScenic" :localdata="scenics">
 				</uni-data-checkbox>
-				<button class="go_home" type="primary" @click="goToHome">开启旅程</button>
+				<button class="go_home" type="primary" @click="goToHome">Start your journey!</button>
 			</view>
 		</view>
 	</view>
@@ -101,13 +101,15 @@
 		top: 45%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		width: 130px;
+		width: 140px;
 		height: 200px;
 	}
 	
 	.go_home {
 		margin-top: 200px;
-		width: 60%;
+		width: 80%;
+		height: 40px;
 		background: linear-gradient(to right, #5ac7d1, #60e1c1);
+		font-size: 15px;
 	}
 </style>

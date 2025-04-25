@@ -22,7 +22,7 @@
     >
       <view class="welcome-message" v-if="messages.length === 0">
         <view class="ai-avatar">
-          <image src="/static/images/ai-avatar.png" mode="aspectFill"></image>
+          <image src="/static/AI.png" mode="aspectFill"></image>
         </view>
         <view class="message-content ai-message">
           <text user-select="true">Hello, I am the scenic AI assistant! I can help you plan your visit, check real-time visitor flow, provide attraction information, etc. What can I help you with?</text>
@@ -40,7 +40,7 @@
         ]"
       >
         <view class="message-avatar" v-if="message.message_type === 'ai'">
-          <image src="/static/images/ai-avatar.png" mode="aspectFill"></image>
+          <image src="/static/AI.png" mode="aspectFill"></image>
         </view>
         <view
           :class="[
@@ -51,7 +51,7 @@
           <text user-select="true">{{ message.content }}</text>
         </view>
         <view class="message-avatar" v-if="message.message_type === 'user'">
-          <image :src="userAvatar" mode="aspectFill"></image>
+          <image src="/static/avatar.png" mode="aspectFill"></image>
         </view>
       </view>
 
@@ -102,7 +102,8 @@
         :class="{ disabled: loading || !inputMessage.trim() }"
         @tap="sendMessage"
       >
-        <text class="iconfont icon-send">&#xe693;</text>
+        <!-- <text class="iconfont icon-send">&#xe693;</text> -->
+        <image class="chat-icon" src="/static/send.png" mode="aspectFit"></image>
       </view>
     </view>
   </view>
@@ -448,6 +449,7 @@ export default {
     .message-item {
       display: flex;
       margin-bottom: 30rpx;
+      width: 95%;
     }
 
     .user-message-item {

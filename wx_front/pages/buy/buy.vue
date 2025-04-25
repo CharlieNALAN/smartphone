@@ -2,7 +2,7 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>购票详情</view>
+				<view>Buy Tickets</view>
 			</template>
 		</NavBar>
 		<view class="container">
@@ -10,7 +10,7 @@
 				<u-line margin="5px 0 0 0" color="white" />
 				<view class="title">{{attraction_data.attraction_name}}</view>
 				<u-line margin="15px 0px" color="lightgrey" />
-				<view class="title">游玩日期</view>
+				<view class="title">Visit Date</view>
 				<u-line margin="6px 0" color="white" />
 				<uni-datetime-picker type="date" :clear-icon="false" v-model="ticket_date" @maskClick="maskClick" />
 			</uni-card>
@@ -18,7 +18,7 @@
 				<u-line margin="5px 0 0 0" color="white" />
 				<u-row>
 					<u-col span="10">
-						<view class="title" style="font-size: 20px;">单日票</view>
+						<view class="title" style="font-size: 20px;">Single Day Ticket</view>
 					</u-col>
 					<u-col span="2">
 						<image class="rmb" src="/static/rmb.png" mode="aspectFill" />
@@ -27,15 +27,15 @@
 				</u-row>
 				<u-line margin="5px 0px" color="white" />
 				<u-row>
-					<u-col span="9">
-						<view>开放时间：{{attraction_data.open_time}} - {{attraction_data.close_time}}</view>
+					<u-col span="8">
+						<view>Opening: {{attraction_data.open_time}} - {{attraction_data.close_time}}</view>
 					</u-col>
-					<u-col span="3">
+					<u-col span="4">
 						<u-number-box v-model="ticketCount" @change="handleNumberChange"></u-number-box>
 					</u-col>
 				</u-row>
 				<u-line margin="15px 0px" color="lightgrey" />
-				<view class="title">填写游玩人</view>
+				<view class="title">Fill Info</view>
 				<u-line margin="5px 0px" color="white" />
 				<view v-if="isVisible" v-for="(visitor, index) in visitors" :key="index">
 					<u-row>
@@ -44,16 +44,16 @@
 							</u-icon>
 						</u-col>
 						<u-col span="10">
-							<view>姓名 {{visitor.name}}</view>
-							<view>身份证号 {{visitor.idcard}}</view>
-							<view>手机号码 {{visitor.phone}}</view>
+							<view>Name {{visitor.name}}</view>
+							<view>ID {{visitor.idcard}}</view>
+							<view>Phone {{visitor.phone}}</view>
 						</u-col>
 						<u-col span="1">
 							<u-icon name="arrow-right" color="#2979ff" size="18"></u-icon>
 						</u-col>
 					</u-row>
 				</view>
-				<u-button :disabled="ticketCount <= visitors.length" text="新增游玩人" @click="addTravellers"
+				<u-button :disabled="ticketCount <= visitors.length" text="Add Visitor" @click="addTravellers"
 					color="radial-gradient(circle, #9890e3, #b1f4cf)">
 				</u-button>
 			</uni-card>
@@ -61,43 +61,43 @@
 		<view class="pay">
 			<u-row>
 				<u-col span="9">
-					<text>合计：</text>
+					<text>Total: </text>
 					<image class="rmb" src="/static/rmb.png" mode="aspectFill" />
 					<text class="fee" style="font-size: 22px;">{{totalFee}}</text>
 				</u-col>
 				<u-col span="3">
-					<u-button text="立即支付" @click="gotoPay" color="linear-gradient(to right, #f9b423, #ff4e50)">
+					<u-button text="Pay Now" @click="gotoPay" color="linear-gradient(to right, #f9b423, #ff4e50)">
 					</u-button>
 				</u-col>
 			</u-row>
 		</view>
 		<view>
 			<uni-popup ref="add" type="bottom" backgroundColor="#f4f5f7">
-					<uni-title type="h2" title="新增游玩人" align="center"></uni-title>
+					<uni-title type="h2" title="Add Vistor" align="center"></uni-title>
 					<view class="col-horizontal-center" style="height: 500px; ">
 						<view class="form">
 							<u-form @submit.native.prevent="submitForm">
 								<u-form-item>
-									<u-input type="text" v-model="newVisitor.name" placeholder="与证件姓名一致" border="none">
-										<u--text text="中文姓名" slot="prefix" margin="0 15px 0 0"></u--text>
+									<u-input type="text" v-model="newVisitor.name" placeholder="The name on the ID card should be the same" border="none">
+										<u--text text="Name" slot="prefix" margin="0 15px 0 0"></u--text>
 									</u-input>
 								</u-form-item>
 								<u-form-item>
-									<u-input type="idcard" v-model="newVisitor.idcard" placeholder="与证件号码一致"
+									<u-input type="idcard" v-model="newVisitor.idcard" placeholder="The ID should be the same"
 										border="none">
-										<u--text text="身份证号" slot="prefix" margin="0 15px 0 0"></u--text>
+										<u--text text="ID" slot="prefix" margin="0 15px 0 0"></u--text>
 									</u-input>
 								</u-form-item>
 								<u-form-item>
-									<u-input type="number" v-model="newVisitor.phone" placeholder="用于接受出行短信"
+									<u-input type="number" v-model="newVisitor.phone" placeholder="Used to receive travel text messages"
 										border="none">
-										<u--text text="手机号码" slot="prefix" margin="0 15px 0 0"></u--text>
+										<u--text text="Phone" slot="prefix" margin="0 15px 0 0"></u--text>
 									</u-input>
 								</u-form-item>
 							</u-form>
 						</view>
 						<view class="hor-ver-center" style="width: 380px; height: 400px;">
-							<u-button type="primary" shape="circle" text="保存并使用" @click="submitForm"></u-button>
+							<u-button type="primary" shape="circle" text="Save and Use" @click="submitForm"></u-button>
 						</view>
 					</view>
 				</uni-popup>

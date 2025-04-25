@@ -2,10 +2,10 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>景点购票</view>
+				<view>Attraction Ticket</view>
 			</template>
 		</NavBar>
-		<uni-search-bar placeholder="搜索景点" bgColor="#EEEEEE" @confirm="search" />
+		<uni-search-bar placeholder="Search Attractions" bgColor="#EEEEEE" @confirm="search" />
 		<!-- <view class="card" v-for="item in attractions">
 			<van-card num="2" :tag="item.category_text" :price="item.fee" :desc="item.address"
 				:title="item.attraction_name" :thumb="imageURL+item.image" thumb-mode="aspectFill">
@@ -28,10 +28,11 @@
 							<text style="margin-left: 3px;">{{ item.address }}</text>
 						</view>
 						<view class="sell-info">
-							<text style="font-size: 14px; margin-left: 3px;">10万+人已购买</text>
+							<text style="font-size: 14px; margin-left: 3px;">1000+ purchase</text>
 							<view class="fee-info">
-								<image class="rmb" src="/static/rmb.png" mode="aspectFill" />
-								<text class="fee" style="font-size: 30px;">{{ item.fee}}</text>
+								<!-- <image class="rmb" src="/static/rmb.png" mode="aspectFill" /> -->
+								<text class="fee" style="font-size: 15px;">HKD</text>
+								<text class="fee" style="font-size: 25px;">{{ item.fee}}</text>
 							</view>
 						</view>
 					</view>
@@ -54,10 +55,10 @@
 				imageURL: 'http://localhost:8000/media/',
 				attractions: [],
 				category_choices: { // 定义category的映射关系
-					1: "自然风光",
-					2: "历史遗迹",
-					3: "文化遗产",
-					4: "娱乐体验"
+					1: "Natural",
+					2: "Historical",
+					3: "Cultural",
+					4: "Entertaining"
 				},
 			}
 		},
@@ -136,7 +137,7 @@
 		font-size: 12px;
 		display: flex;
 		justify-content: space-between;
-		width: 250px;
+		width: 210px;
 	}
 
 	.fee-info {

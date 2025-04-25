@@ -83,9 +83,9 @@ WSGI_APPLICATION = 'back_end.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scenic',
+        'NAME': 'smartphone',
         'USER': 'root',
-        'PASSWORD': 'rootroot',
+        'PASSWORD': 'czl20020308',
         'HOST': '127.0.0.1',
         'PORT': 3306,
     }

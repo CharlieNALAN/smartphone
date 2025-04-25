@@ -5,47 +5,47 @@
 				:style="'height:'+ show_screen_height + 'px;' +'width: 100%;z-index: -1;'" mode="scaleToFill"></image>
 			<view class="login" v-if="isLogin">
 				<u-line margin="10px 0 0 0" color="white" />
-				<uni-title type="h2" title="欢迎使用智游,请登录～" align="center"></uni-title>
+				<uni-title type="h2" title="Welcome! Please login～" align="center"></uni-title>
 				<view class="lr-form">
 					<uni-forms ref="baseForm" :modelValue="loginData">
-						<uni-forms-item label="手机号">
-							<uni-easyinput v-model="loginData.phone" placeholder="请输入手机号" />
+						<uni-forms-item label="Phone">
+							<uni-easyinput v-model="loginData.phone" placeholder="Please enter your phone number" />
 						</uni-forms-item>
-						<uni-forms-item label="密码">
-							<uni-easyinput type="password" v-model="loginData.password" placeholder="请输入密码" />
+						<uni-forms-item label="Password">
+							<uni-easyinput type="password" v-model="loginData.password" placeholder="Please enter your password" />
 						</uni-forms-item>
 					</uni-forms>
 					<view class="button-group">
-						<button class="login-btn" size="mini" @click="login">登录</button>
-						<button class="register-btn" size="mini" @click="isRegister=true">注册</button>
+						<button class="login-btn" size="mini" @click="login">Login</button>
+						<button class="register-btn" size="mini" @click="isRegister=true">Register</button>
 					</view>
 				</view>
 			</view>
 			<view class="register" v-if="isRegister">
-				<uni-title type="h2" title="还没有账号？请注册～" align="center"></uni-title>
+				<uni-title type="h2" title="No account yet? Please register～" align="center"></uni-title>
 				<view class="lr-form">
 					<uni-forms ref="baseForm" :modelValue="registerData">
-						<uni-forms-item label="用户名">
-							<uni-easyinput v-model="registerData.username" placeholder="请输入用户名" />
+						<uni-forms-item label="Username">
+							<uni-easyinput v-model="registerData.username" placeholder="Please enter your username" />
 						</uni-forms-item>
-						<uni-forms-item label="手机号">
+						<uni-forms-item label="Phone">
 							<view class="form-item">
-								<uni-easyinput v-model="registerData.phone" placeholder="请授权手机号" :disabled="isGettingPhone" />
+								<uni-easyinput v-model="registerData.phone" placeholder="Please authorize your phone number" :disabled="isGettingPhone" />
 								<button style="margin-left: 10px;" size="mini" open-type="getPhoneNumber"
-									@getphonenumber="getUserPhone" :loading="isGettingPhone">授权</button>
+									@getphonenumber="getUserPhone" :loading="isGettingPhone">Authorize</button>
 								<!-- <button style="margin-left: 5px;" size="mini" type="default" @click="showPhoneInputDialog">手动输入</button> -->
 							</view>
 							<view v-if="isDemoMode" class="demo-tag">
-								<text>演示模式</text>
+								<text>Demo Mode</text>
 							</view>
 						</uni-forms-item>
-						<uni-forms-item label="密码">
-							<uni-easyinput type="password" v-model="registerData.password" placeholder="请输入密码" />
+						<uni-forms-item label="Password">
+							<uni-easyinput type="password" v-model="registerData.password" placeholder="Please enter your password" />
 						</uni-forms-item>
 					</uni-forms>
 					<view class="button-group">
-						<button class="login-btn" size="mini" @click="register">注册</button>
-						<button class="register-btn" size="mini" @click="isRegister=false">返回</button>
+						<button class="login-btn" size="mini" @click="register">Register</button>
+						<button class="register-btn" size="mini" @click="isRegister=false">Back</button>
 					</view>
 				</view>
 			</view>
@@ -95,7 +95,7 @@
 				if (!e.detail.code) {
 					console.error("未获取到授权code");
 					uni.showToast({
-						title: '授权失败，请重试',
+						title: 'Authorization failed, please try again',
 						icon: 'none'
 					});
 					return;
@@ -126,7 +126,7 @@
 							// 获取手机号失败
 							console.error("获取手机号失败:", res.data);
 							uni.showToast({
-								title: res.data.message || '获取手机号失败，请重试',
+								title: res.data.message || 'Failed to get phone number, please try again',
 								icon: 'none',
 								duration: 3000
 							});
@@ -135,7 +135,7 @@
 					fail: (err) => {
 						console.error('获取手机号请求失败:', JSON.stringify(err));
 						uni.showToast({
-							title: '网络请求失败，请检查网络',
+							title: 'Network request failed, please check the network',
 							icon: 'none',
 							duration: 3000
 						});
@@ -152,7 +152,7 @@
 				
 				// 显示加载提示，模拟网络请求
 				uni.showLoading({
-					title: '获取手机号中...'
+					title: 'Getting phone number...'
 				});
 				
 				// 模拟网络延迟
@@ -166,7 +166,7 @@
 					
 					// 显示成功提示
 					uni.showToast({
-						title: '模拟获取成功',
+						title: 'Simulated ok',
 						icon: 'success'
 					});
 					
@@ -179,7 +179,7 @@
 				// 表单验证
 				if (!this.loginData.phone || !this.loginData.password) {
 					uni.showToast({
-						title: '请填写完整信息',
+						title: 'Please fill in all infor',
 						icon: 'none'
 					});
 					return;
@@ -187,7 +187,7 @@
 				
 				// 显示加载状态
 				uni.showLoading({
-					title: '登录中...'
+					title: 'Logging in...'
 				});
 				
 				// 发送网络请求到后端进行登录验证
@@ -223,7 +223,7 @@
 							
 							// 显示成功提示
 							uni.showToast({
-								title: '登录成功',
+								title: 'Login!',
 								icon: 'success',
 								duration: 1500
 							});
@@ -234,13 +234,13 @@
 							}, 1500);
 						} else {
 							// 登录失败，显示具体错误信息
-							let errorMsg = '登录失败';
+							let errorMsg = 'Login failed';
 							
 							if (res.data.message) {
-								if (res.data.message.includes('手机号')) {
-									errorMsg = '该手机号尚未注册';
-								} else if (res.data.message.includes('密码')) {
-									errorMsg = '密码错误';
+								if (res.data.message.includes('phone')) {
+									errorMsg = 'The phone number has not been registered';
+								} else if (res.data.message.includes('password')) {
+									errorMsg = 'Wrong password';
 								} else {
 									errorMsg = res.data.message;
 								}
@@ -258,9 +258,9 @@
 						uni.hideLoading();
 						
 						// 请求失败，可能是网络问题
-						console.error('登录请求失败', err);
+						console.error('Login request failed', err);
 						uni.showToast({
-							title: '网络连接失败，请检查网络',
+							title: 'Network connection failed, please check the network',
 							icon: 'none',
 							duration: 2000
 						});
@@ -271,16 +271,16 @@
 			register() {
 				if (!this.registerData.username || !this.registerData.phone || !this.registerData.password) {
 					uni.showToast({
-						title: '请填写完整信息',
+						title: 'Please fill in all infor',
 						icon: 'none'
 					});
 					return;
 				}
 				
 				// 显示加载状态
-				uni.showLoading({
-					title: '注册中...'
-				});
+				// uni.showLoading({
+				// 	title: 'Registering...'
+				// });
 				
 				// 发送注册请求
 				uni.request({
@@ -317,13 +317,13 @@
 							this.isRegister = false;
 							
 							uni.showToast({
-								title: '注册成功',
+								title: 'Registered!',
 								icon: 'success'
 							});
 						} else {
 							// 注册失败
 							uni.showToast({
-								title: '注册失败：' + (res.data.message || '未知错误'),
+								title: 'Register failed: ' + (res.data.message || 'Unknown error'),
 								icon: 'none',
 								duration: 3000
 							});
@@ -335,7 +335,7 @@
 						
 						console.error('注册请求失败:', err);
 						uni.showToast({
-							title: '网络请求失败，请检查网络',
+							title: 'Network request failed, please check the network',
 							icon: 'none',
 							duration: 3000
 						});

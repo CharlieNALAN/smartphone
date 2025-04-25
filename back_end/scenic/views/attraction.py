@@ -113,6 +113,25 @@ class AttractionViewSet(ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            data = serializer.data
+            # 添加category_text字段
+            for item in data:
+                item['category_text'] = dict(Attraction.category_choices).get(item['category'])
+            return self.get_paginated_response(data)
+            
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        # 添加category_text字段
+        for item in data:
+            item['category_text'] = dict(Attraction.category_choices).get(item['category'])
+        return Response(data)
+
 
 @csrf_exempt  # 没加这个会报错Forbidden (CSRF cookie not set.)
 def upload(request):

@@ -66,10 +66,10 @@ class Attraction(models.Model):
     description = models.TextField(verbose_name='景点描述', null=True, blank=True, default=None)
     # 在Django中做的约束
     category_choices = (
-        (1, "自然风光"),
-        (2, "历史遗迹"),
-        (3, "文化遗产"),
-        (4, "娱乐体验")
+        (1, "Natural"),
+        (2, "Historical"),
+        (3, "Cultural"),
+        (4, "entertaining")
     )
     category = models.SmallIntegerField(verbose_name="景点类别", choices=category_choices)
     fee = models.FloatField(verbose_name="景点门票", null=True, blank=True, default=None)
@@ -77,9 +77,9 @@ class Attraction(models.Model):
     close_time = models.TimeField(verbose_name="关闭时间")
     flow_limit = models.IntegerField(verbose_name="人流量限制")
     status_choices = (
-        (0, "未开放"),
-        (1, "开放中"),
-        (2, "人流预警")
+        (0, "Closed"),
+        (1, "Opening"),
+        (2, "Crowded")
     )
     status = models.SmallIntegerField(verbose_name="景点状态", choices=status_choices, default=0)
     count = models.IntegerField(verbose_name="景点实时人数", default=0)
@@ -114,10 +114,10 @@ class Ticket(models.Model):
     ticket_count = models.PositiveIntegerField(verbose_name="购票数量", default=1)
     price = models.IntegerField(verbose_name="价格")
     status_choices = (
-        (0, "未支付"),
-        (1, "已支付"),
-        (2, "已完成"),
-        (3, "已取消"),
+        (0, "Pending"),
+        (1, "Paid"),
+        (2, "Used"),
+        (3, "Canceled"),
     )
     status = models.SmallIntegerField(verbose_name="购票订单状态", choices=status_choices, default=0)
     create_time = models.DateTimeField(verbose_name="购票订单创建时间", auto_now_add=True)

@@ -3,20 +3,20 @@
 		<swiper class="route-cards-swiper" :circular="true" :previous-margin="'50rpx'" :next-margin="'50rpx'" @change="handleSwiperChange">
 			<swiper-item v-for="(route, index) in routes" :key="index" class="route-card-item">
 				<view class="route-card" :class="{ 'card-active': currentIndex === index }">
-					<image src="http://localhost:8000/media/attraction_images雷峰夕照.jpeg" mode="aspectFill" class="route-image"></image>
+					<image src="http://localhost:8000/media/attraction_images/new/维多利亚港.jpg" mode="aspectFill" class="route-image"></image>
 					<view class="route-card-content">
-						<view class="route-tag">推荐路线</view>
+						<!-- <view class="route-tag">Recommended Route</view> -->
 						<view class="route-name">{{route.route_name}}</view>
 						<view class="route-info-row">
 							<view class="route-info">
 								<uni-icons type="flag" size="14" color="#ffc107"></uni-icons>
-								<text>{{route.custom_lists ? route.custom_lists.length : 0}} 个景点</text>
+								<text>{{route.custom_lists ? route.custom_lists.length : 0}} Attractions</text>
 							</view>
-							<text class="route-duration">约{{route.duration || '2'}}小时</text>
+							<text class="route-duration">About {{route.duration || '2'}} hours</text>
 						</view>
-						<view class="route-description-text">{{route.route_description || '暂无描述'}}</view>
+						<view class="route-description-text">{{route.route_description || 'No description'}}</view>
 						<view class="see-more-btn" @click="showRouteDetail(route)">
-							<text>查看路线</text>
+							<text>View Route</text>
 							<uni-icons type="right" size="14" color="#ffffff"></uni-icons>
 						</view>
 					</view>
@@ -43,7 +43,7 @@
 							<text class="attraction-name">{{attraction.attraction.attraction_name}}</text>
 							<view class="attraction-address" @click="openMapNav(attraction)">
 								<uni-icons type="location-filled" size="16" color="#3bcb98"></uni-icons>
-								<text class="address-text">{{attraction.attraction.address || '暂无地址信息'}}</text>
+								<text class="address-text">{{attraction.attraction.address || 'No address information'}}</text>
 							</view>
 						</view>
 						<view class="nav-button" @click="openMapNav(attraction)">
@@ -290,6 +290,7 @@
 		color: #666;
 		line-height: 1.6;
 		margin-bottom: 30rpx;
+		width: 90%;
 	}
 	
 	.attraction-list {
