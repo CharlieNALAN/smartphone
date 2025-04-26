@@ -111,7 +111,7 @@
 					isFavorite: this.recommend_datas[index].isFavorite
 				});
 			},
-			navto_detail(item) {
+			to_detail(item) {
 				console.log('item: ' + item);
 				uni.navigateTo({
 					url: '/pages/detail/detail?attraction_id=' + item.attraction_id,

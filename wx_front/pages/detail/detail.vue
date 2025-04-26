@@ -18,7 +18,7 @@
 		</view>
 		<uni-list>
 			<uni-list-item :title="attraction_data.attraction_name" />
-			<uni-list-item :title="'开园时间: '+ attraction_data.open_time + '-' + attraction_data.close_time" />
+			<uni-list-item :title="'Opening: '+ attraction_data.open_time + '-' + attraction_data.close_time" />
 			<uni-list-item>
 				<template v-slot:body>
 					<view class="address_view">
@@ -28,7 +28,7 @@
 				<template v-slot:footer>
 					<view class="nav_view" @click="navigateToNavigationPage(attraction_data)">
 						<image class="slot_img" src="/static/tabbar_icon/location-active.png" mode="widthFix"></image>
-						<text>地图·导航</text>
+						<text>Map·Nav</text>
 					</view>
 				</template>
 			</uni-list-item>
@@ -37,16 +37,16 @@
 		<view class="tour_detail_card">
 			<view class="tour_detail_content">
 				<view class="tour_index_title">
-					<text>游玩指数</text>
+					<text>Playability Index</text>
 				</view>
 				<view class="tour_index_grade">
 					<view class="tour_index_grade_content">
-						<text>推荐指数:9</text>
-						<text>观赏度:10</text>
+						<text>Recommended: 9</text>
+						<text> Viewing: 10</text>
 					</view>
 					<view class="tour_index_grade_content">
-						<text>经典热度:10</text>
-						<text>舒适度:8</text>
+						<text>Popularity: 10</text>
+						<text>Comfort: 8</text>
 					</view>
 				</view>
 			</view>
@@ -54,7 +54,7 @@
 		<view class="tour_detail_card">
 			<view class="tour_detail_content">
 				<view class="tour_index_title">
-					<text>景点介绍</text>
+					<text>Attraction Introduction</text>
 				</view>
 				<view class="tour_intro">
 					{{attraction_data.description}}
