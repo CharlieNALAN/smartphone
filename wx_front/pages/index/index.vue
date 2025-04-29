@@ -48,7 +48,7 @@
 			},
 			handleLoginSuccess() {
 				uni.showToast({
-					title: 'Login successfully',
+					title: 'Login!',
 					icon: 'success'
 				});
 				this.currentIndex = 2;
@@ -84,10 +84,10 @@
 						}
 					});
 					// 注册或登录成功后的操作
-					uni.showToast({
-						title: 'Login successfully',
-						icon: 'success'
-					});
+					// uni.showToast({
+					// 	title: 'Login!',
+					// 	icon: 'success'
+					// });
 				} catch (error) {
 					console.error('微信登录失败:', error);
 					uni.showToast({

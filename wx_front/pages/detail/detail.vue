@@ -2,7 +2,7 @@
 	<view>
 		<NavBar>
 			<template slot="title">
-				<view>景点详情</view>
+				<view>Attraction Details</view>
 			</template>
 		</NavBar>
 		<!-- <uni-nav-bar shadow fixed="true" statusBar="true" @clickLeft="back">

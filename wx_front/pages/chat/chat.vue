@@ -48,7 +48,8 @@
             message.message_type === 'user' ? 'user-message' : 'ai-message',
           ]"
         >
-          <text user-select="true">{{ message.content }}</text>
+          <text v-if="message.message_type === 'user'" user-select="true">{{ message.content }}</text>
+          <rich-text v-else user-select="true" :nodes="message.content"></rich-text>
         </view>
         <view class="message-avatar" v-if="message.message_type === 'user'">
           <image src="/static/avatar.png" mode="aspectFill"></image>
@@ -103,7 +104,7 @@
         @tap="sendMessage"
       >
         <!-- <text class="iconfont icon-send">&#xe693;</text> -->
-        <image class="chat-icon" src="/static/send.png" mode="aspectFit"></image>
+        <image class="chat-icon" src="/static/send.png" mode="aspectFit" style="height: 35px;"></image>
       </view>
     </view>
   </view>
@@ -146,7 +147,7 @@ export default {
         {
           label: "Real-time Info",
           type: "real_time",
-          prompt: "Here's the current visitor flow information at various attractions. Would you like more specific details?"
+          prompt: "Here's the current visitor flow information at this scenic."
         },
         {
           label: "Attraction Info",
@@ -292,6 +293,7 @@ export default {
 
         if (res.statusCode === 201) {
           this.messages.push(res.data.ai_message);
+          console.log("ai message:", res.data.ai_message.content);
           this.scrollToBottom();
         } else {
           throw new Error(res.data.error || "发送消息失败");
@@ -504,6 +506,11 @@ export default {
       background-color: #ffffff;
       color: #333333;
       border-top-left-radius: 0;
+      
+      /deep/ rich-text {
+        display: block;
+        width: 100%;
+      }
     }
 
     .loading-message {
@@ -552,8 +559,8 @@ export default {
     }
 
     .send-button {
-      width: 70rpx;
-      height: 70rpx;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
       background-color: #3c88fd;
       display: flex;
@@ -591,6 +598,33 @@ export default {
         background-color: #e0e0e0;
       }
     }
+  }
+
+  /* 添加rich-text全局样式 */
+  :deep(rich-text) {
+    width: 100%;
+  }
+  
+  /* 确保列表项没有额外的缩进 */
+  :deep(ul), :deep(ol) {
+    padding-left: 0;
+    margin-left: 15rpx;
+    list-style-position: inside;
+  }
+  
+  :deep(li) {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  :deep(p) {
+    margin: 0;
+    padding: 0;
+  }
+  
+  :deep(h3) {
+    margin: 20rpx 0 10rpx 0;
+    padding: 0;
   }
 }
 
