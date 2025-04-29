@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import User, Scenic, Attraction, ChatSession, ChatMessage, ChatIntent
 from ..serializers import ChatMessageSerializer, ChatSessionSerializer
 import requests
-import re
+import re, ast
 from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
@@ -113,7 +113,7 @@ class ChatMessageView(APIView):
             intent = self._process_intent(user_chat_message)
         
         # 如果是prompt消息，直接返回该消息而不生成新回复
-        if is_prompt:
+        if is_prompt and intent_type is not 'real_time':
             ai_chat_message = ChatMessage.objects.create(
                 session=session,
                 message_type='ai',
@@ -121,7 +121,10 @@ class ChatMessageView(APIView):
             )
         else:
             # 根据用户意图生成回复
-            ai_response = self._generate_response(intent, session)
+            if intent_type == 'real_time':
+                ai_response = self._generate_real_time_info(session.scenic)
+            else:
+                ai_response = self._generate_response(intent, session)
             ai_chat_message = ChatMessage.objects.create(
                 session=session,
                 message_type='ai',
@@ -139,6 +142,22 @@ class ChatMessageView(APIView):
         
         return Response(result, status=status.HTTP_201_CREATED)
     
+    def extract_first_json_block(self, s: str) -> str:
+        """返回 s 中第一个成对平衡的 {…} 子串，否则抛 ValueError"""
+        start = s.find('{')
+        if start < 0:
+            raise ValueError("No JSON-like block found")
+        count = 0
+        for idx, ch in enumerate(s[start:], start):
+            if ch == '{':
+                count += 1
+            elif ch == '}':
+                count -= 1
+            # 当计数归零，说明找到了完整的一个 JSON 对象
+            if count == 0:
+                return s[start:idx+1]
+        raise ValueError("Braces never balanced")
+
     def _call_llm_api(self, prompt: str, max_tokens: int = 512, temperature: float = 0.7) -> str:
         """
         Use the OpenAI client to call the model
@@ -165,63 +184,51 @@ class ChatMessageView(APIView):
         print(f"Previous intent: {previous_intent}")
     
         prompt = (
-            "You are a scenic AI assistant. Your goal is to analyze and determine the intent and other information based on the user's message and the previous intent."
+            "You are a scenic AI assistant. Your goal is to analyze and determine the intent and other information based on the context information."
             "Important context information:\n"
             f"- The previous intent type: {previous_intent}\n"
+            f"The user new massage is: \"{message.content}\"\n"
             "Instructions:\n"
-            "1. Read the user's message and determine the intent type.\n"
-            "2. Identify the parameters such as location, preference, time constraint, etc.\n"
+            "1. Read the user's new message, determine the current intent type.\n"
+            "2. Identify the parameters: location, preference, time constraint.\n"
             "3. Provide a confidence score for the intent detection (0-1).\n"
             "4. The intent type can be one of the following: route, real_time, ticket_info, attraction_info, general.\n"
             "5. If the user's message is unclear or related to multiple intents, but related to the previous intent, keep the previous intent type and increase the confidence.\n"
             "6. If user only send a location such as the scenic name or attraction name, keep the previous intent type and increase the confidence.\n"
-            "6. If it is determined that the user's intent has been clearly changed, update to the new intent and give a higher confidence.\n"
-            "7. Only output the result in JSON format, do not include any other content.\n"
-            "- Example output: {'intent_type': 'route', 'parameters': {'location': 'West Lake', 'time_constraint': 'one day', 'preference': 'natural scenery'}, 'confidence': 0.8}\n"
-            f"The user new massage is: \"{message.content}\"\n"
+            "7. If it is determined that the user's intent has been clearly changed, update to the new intent and give a higher confidence.\n"
+            "8. Only output the result with highest confidence in JSON format, DO NOT include your thinking process and any other content.\n"
+            "- Example output: {\"intent_type\": \"route\", \"parameters\": {\"location\": \"Hong Kong\", \"time_constraint\": \"one day\", \"preference\": \"natural scenery\"}, \"confidence\": 0.8}\n"
+            
         )
         response = self._call_llm_api(prompt)
         print(f"Process intent response: {response}")
         try:
-            json_match = re.search(r'\{[\s\n]*"intent_type"[\s\S]*?\}(?=\s*$|\n|\.)', response)
-            if json_match:
-                # Found the standard JSON format (double quotes)
-                json_str = json_match.group(0)
-                intent_data = json.loads(json_str)
-            else:
-                # Try to handle the JSON format using single quotes
-                json_match = re.search(r'\{[\s\n]*\'intent_type\'[\s\S]*?\}(?=\s*$|\n|\.)', response)
-                if json_match:
-                    json_str = json_match.group(0).replace("'", '"')
-                    intent_data = json.loads(json_str)
-                else:
-                    # Try to get any JSON data block
-                    json_blocks = re.findall(r'\{[\s\S]*?\}', response)
-                    for block in json_blocks:
-                        # Check if it contains the necessary fields
-                        if '"intent_type"' in block or "'intent_type'" in block:
-                            try:
-                                # Try to handle the double quotes version
-                                intent_data = json.loads(block)
-                                break
-                            except json.JSONDecodeError:
-                                # Try to convert single quotes to double quotes
-                                modified_block = block.replace("'", '"')
-                                intent_data = json.loads(modified_block)
-                                break
-                    else:
-                        raise ValueError("Can't find valid intent data")
-                    
-                intent_type = intent_data.get('intent_type', 'general')
-                parameters = intent_data.get('parameters', {}) or {}
-                confidence = intent_data.get('confidence', 0.5)
+            # 1. 匹配第一个 {...} 块
+            block = self.extract_first_json_block(response)
+            print("Got JSON block:", block)
+
+            # 2. 优先尝试 JSON 解析（双引号）
+            try:
+                intent_data = json.loads(block)
+                print("intent_data: ", intent_data)
+            except json.JSONDecodeError:
+                # 3. 再尝试 ast.literal_eval（支持单引号、Python 字典字面量）
+                intent_data = ast.literal_eval(block)
+
+            # 4. 最终提取字段
+            intent_type = intent_data.get('intent_type', 'general')
+            parameters  = intent_data.get('parameters', {}) or {}
+            confidence  = float(intent_data.get('confidence', 0.5))
+
         except Exception as e:
             print(f"解析JSON失败: {e}")
-            # When parsing fails, use the default value
             intent_type, parameters, confidence = 'general', {}, 0.5
+        # intent_type = intent_data.get('intent_type', 'general')
+        # parameters  = intent_data.get('parameters', {}) or {}
+        # confidence  = float(intent_data.get('confidence', 0.5))
         print(f"Intent type: {intent_type}, Parameters: {parameters}, Confidence: {confidence}")
 
-        if previous_intent == 'route' and (intent_type == 'general' or confidence < 0.6):
+        if previous_intent != 'general' and (intent_type == 'general' or confidence < 0.6):
             # 如果上一个意图是路线推荐，而当前意图不明确或置信度低
             # 则假定用户仍在讨论路线
             intent_type = 'route'
@@ -297,35 +304,37 @@ class ChatMessageView(APIView):
     """ 
     def _extract_response(self, response: str, response_type: str = "general") -> str:
         patterns = {
-            "route": r'Ok, I have recommended a tour route for you:[\s\S]*?(?=\s*\*/|$)',
-            "ticket_info": r'Ok, the ticket information of the attraction is as follows:[\s\S]*?(?=\s*\*/|$)',
-            "general": r'[\s\S]+?(?=\s*\*/|$)'
+            "route":       r'(Ok, I have recommended a tour route for you:[\s\S]*?)(?=\s*\*/|$)',
+            "ticket_info": r'(Ok, the ticket information of the attraction is as follows:[\s\S]*?)(?=\s*\*/|$)',
+            "general":     r'([\s\S]+?)(?=\s*\*/|$)'
         }
 
-        # Get the current response type pattern, if not specified, use general
+        # 1. 根据 response_type 提取目标片段，fallback 到 entire response
         pattern = patterns.get(response_type, patterns["general"])
-        
-        # Try to use the corresponding pattern to extract text
-        matches = re.findall(pattern, response, re.DOTALL)
-        
-        if matches:
-            return matches[0].strip()
-        
-        # If no specific pattern is matched, try to clean the response text
-        # Remove various programming language code blocks, HTML tags, and comment symbols
-        cleaned_text = re.sub(r'<.*?>|/\*|\*/|#include.*?|int main\(\).*?{|public class.*?{|print\(|console\.log|println!', '', response)
-        cleaned_text = re.sub(r'return 0;|std::cout <<|Console\.WriteLine|printf\(|echo|let result =|"}|<!DOCTYPE.*?>', '', cleaned_text)
-        
-        cleaned_text = re.sub(r'\/\/.*?$|\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->', '', cleaned_text, flags=re.MULTILINE)
-        
-        cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
-        
-        if cleaned_text:
-            return cleaned_text
-        
-        return response
+        m = re.search(pattern, response, flags=re.DOTALL)
+        text = m.group(1) if m else response
 
-    
+        # 2. 清理 Markdown/``` 代码块
+        text = re.sub(r'```[\s\S]*?```', '', text)
+
+        # 3. 清理注释 /*...*/, //..., <!--...-->
+        text = re.sub(r'/\*[\s\S]*?\*/', '', text)
+        text = re.sub(r'//.*?(?=\n|$)', '', text)
+        text = re.sub(r'<!--[\s\S]*?-->', '', text)
+
+        # 4. 清理常见编程残留片段（可根据需要删减）
+        text = re.sub(
+            r'\b(return\s+0;|int\s+main\(\)|public\s+class\b|#include\b)[\s\S]*',
+            '',
+            text
+        )
+
+        # 5. 合并多余空白，保留 HTML 标签
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        return text
+
+        
     def _generate_route_recommendation(self, parameters: Dict[str, Any], attractions: List[Dict[str, Any]], scenic=None) -> str:
         """Generate route recommendation reply"""
         # Create a formatted string of scenic attractions information as the knowledge base of LLM
@@ -336,15 +345,15 @@ class ChatMessageView(APIView):
                             f"Category: {attraction.category}, Status: {status_text}, " \
                             f"Opens: {attraction.open_time}to{attraction.close_time}, " \
                             f"Current number of visitors: {attraction.count}, Maximum capacity: {attraction.flow_limit}\n"
-        # print(f"Attractions info: {attractions_info}")
+        print(f"Attractions info: {attractions_info}")
         
         # When location is empty, use scenic.scenic_name as the user's location
         location = parameters.get("location", "")
         if not location and scenic:
             location = scenic.scenic_name
         
-        preference = parameters.get("preference", "")
-        time_constraint = parameters.get("time_constraint", "")
+        preference = parameters.get("preference", "no preference")
+        time_constraint = parameters.get("time_constraint", "no time constraint")
         print(f"Location: {location}, Preference: {preference}, Time constraint: {time_constraint}")
         prompt = f"""
             You are a scenic AI assistant. Please recommend a tour route for the user based on the following information:
@@ -365,6 +374,7 @@ class ChatMessageView(APIView):
             6. Try to meet the user's keyword preferences.
             7. Provide a reasonable itinerary and recommend a visit time for each attraction.
             8. Give a brief reason for the route.
+            9. Answer in html format, you can use <br> to break the line and other html tags to beautify the text.
 
             Please start your answer with "Ok, I have recommended a tour route for you:"
         """
@@ -395,16 +405,16 @@ class ChatMessageView(APIView):
         most_crowded = attractions.first()
         least_crowded = attractions.last()
         
-        response = f"{scenic.scenic_name} current real-time situation:\n\n"
-        response += f"- The most crowded attraction: {most_crowded.attraction_name}, about {most_crowded.count} people\n"
-        response += f"- The least crowded attraction: {least_crowded.attraction_name}, about {least_crowded.count} people\n\n"
+        response = f"🗺️ {scenic.scenic_name} current real-time situation:<br>"
+        response += f"- The most crowded attraction: {most_crowded.attraction_name}, about {most_crowded.count} people<br>"
+        response += f"- The least crowded attraction: {least_crowded.attraction_name}, about {least_crowded.count} people<br>"
         
         # Add a warning for crowded attractions
         alert_attractions = attractions.filter(status=2)
         if alert_attractions:
-            response += "⚠️ The following attractions are currently crowded, please visit them during off-peak hours:\n"
+            response += "⚠️ The following attractions are currently crowded, you can visit them during off-peak hours:<br>"
             for attraction in alert_attractions:
-                response += f"- {attraction.attraction_name}\n"
+                response += f"- {attraction.attraction_name}<br>"
                 
         return response
     
@@ -416,14 +426,14 @@ class ChatMessageView(APIView):
             # Query specific attractions
             try:
                 attraction = Attraction.objects.get(attraction_name=attraction_name)
-                response = f"📍 {attraction.attraction_name}\n\n"
-                response += f"{attraction.description}\n\n"
-                response += f"Address: {attraction.address}\n"
-                response += f"Open time: {attraction.open_time.strftime('%H:%M')} - {attraction.close_time.strftime('%H:%M')}\n"
+                response = f"📍 {attraction.attraction_name}<br>"
+                response += f"{attraction.description}<br>"
+                response += f"🏡 Address: {attraction.address}<br>"
+                response += f"⏰ Open time: {attraction.open_time.strftime('%H:%M')} - {attraction.close_time.strftime('%H:%M')}<br>"
                 if attraction.fee:
-                    response += f"Ticket price: ¥{attraction.fee}\n"
+                    response += f"🎫 Ticket price: ${attraction.fee}<br>"
                 if attraction.phone:
-                    response += f"Phone: {attraction.phone}\n"
+                    response += f"📞 Phone: {attraction.phone}<br>"
                 return response
             except Attraction.DoesNotExist:
                 return f"Sorry, I couldn't find information about {attraction_name}."
@@ -453,7 +463,7 @@ class ChatMessageView(APIView):
 
             If the attraction does not need to buy tickets, please say that the attraction is free and visitors do not need to buy tickets to enter.
 
-            Only return the ticket information text, do not include any programming code or other non-related content.
+            Only return the ticket information in beautified html format (do not use <li>), do not include any programming code or other non-related content.
         """
         response = self._call_llm_api(prompt, max_tokens=512, temperature=0.7)
 
